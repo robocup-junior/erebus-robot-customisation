@@ -1,0 +1,13 @@
+<label>{{name}} ({{cost}}) :</label><input [checked]="checked" (change)="click($event)" type="{{type}}">
+<div *ngIf="checked == true">
+    <label>X: </label><input type="range" max="100" min="0" value="{{x}}" (input)="sliderChange($event, 'x')"><input value={{x}} (keyup)="specificValue($event,'x')">
+    <br>
+    <label>Y: </label><input type="range" max="100" min="0" value="{{y}}" (input)="sliderChange($event, 'y')"><input value={{y}} (keyup)="specificValue($event,'y')">
+    <br>
+    <label>Z: </label><input type="range" max="100" min="0" value="{{z}}" (input)="sliderChange($event, 'z')"><input value={{z}} (keyup)="specificValue($event,'z')">
+    <br>
+    <label>Name: </label><input (keyup)="updateName($event)">
+    <br>
+</div>
+<br *ngIf="checked == false">
+<br *ngIf="checked == false">
