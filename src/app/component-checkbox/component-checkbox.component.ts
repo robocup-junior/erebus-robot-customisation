@@ -21,9 +21,9 @@ export class CheckBoxComponent {
     check = new Subject<CheckBoxComponent>();
 
     checked = false;
-    x: number = 0;
-    y: number = 0;
-    z: number = 0;
+    x: number = 0.0;
+    y: number = 0.0;
+    z: number = 0.0;
     customName: string = "";
 
     click($event): void{

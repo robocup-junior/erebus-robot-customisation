@@ -32,7 +32,7 @@ export class AppComponent {
     this.wheelsIterator = Array(this.numberOfWheels).fill(0);
     if (this.previousWheelNumber - this.numberOfWheels > 0){
       //decreased slider
-      this.addSelectedComponent({name: "Wheel " + this.previousWheelNumber, type: "sub"});
+      this.addSelectedComponent({dictName: "Wheel " + this.previousWheelNumber, type: "sub"});
     }
   }
 
@@ -42,21 +42,21 @@ export class AppComponent {
     this.distsIterator = Array(this.numberOfDists).fill(0);
     if (this.previousDistNumber - this.numberOfDists > 0){
       //decreased slider
-      this.addSelectedComponent({name: "Dist " + this.previousDistNumber, type: "sub"});
+      this.addSelectedComponent({dictName: "Dist " + this.previousDistNumber, type: "sub"});
     }
   }
   addSelectedComponent($event){
     if ($event["type"] != "sub"){
       this.selectedComponents[$event["dictName"]] = {
                                          name: $event["name"],
-                                         x: $event["x"],
-                                         y: $event["y"],
-                                         z: $event["y"],
+                                         x: $event["x"]/10000,
+                                         y: $event["y"]/10000,
+                                         z: $event["y"]/10000,
                                          customName: $event["customName"]};
     } else {
       delete this.selectedComponents[$event["dictName"]];
     }
-    //console.log(this.selectedComponents)
+    console.log(this.selectedComponents)
   }
   export(){
     var proto_code = `
@@ -114,7 +114,7 @@ export class AppComponent {
         Camera {
           name "${this.selectedComponents[component]["customName"]}"
           translation ${this.selectedComponents[component]["x"]} ${this.selectedComponents[component]["y"]} ${this.selectedComponents[component]["z"]}
-          rotation 0 1 0 0.523599
+          rotation 0 1 0 0
           children [
             Transform {
               rotation 0 0.707107 0.707107 3.14159
