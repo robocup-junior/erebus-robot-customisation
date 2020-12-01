@@ -64,6 +64,7 @@ export class SliderComponent {
             name: this.displayName,
             customName: this.customName, 
             x: this.x,
-            y: this.y});
+            y: this.y,
+            z: this.z});
     }
 }

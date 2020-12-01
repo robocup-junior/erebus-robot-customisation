@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { components } from './component_costs';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   cost = 0;
   budget = 900;
   title = 'robot-customisation';
@@ -22,6 +24,58 @@ export class AppComponent {
 
   //selectedComponents = {"Wheels": {count: this.numberOfWheels, x: 0, y: 0}};
   selectedComponents = {};
+
+  @ViewChild('three') threeDiv: ElementRef;  
+  robotModel: THREE.Mesh;
+  wheel: THREE.Mesh;
+  wheels = {};
+  scene = new THREE.Scene();
+
+  ngAfterViewInit() {
+    var body = this;
+    const camera = new THREE.PerspectiveCamera( 45, 1, 1, 10000 );
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize( 500, 500 );
+
+    const controls = new OrbitControls( camera, renderer.domElement );
+
+    const skyColor = 0xFFFFFF;  // light blue
+    const groundColor = 0x000000;  // brownish orange
+    const intensity = 1;
+    const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+    body.scene.add(light);
+
+
+    //controls.update() must be called after any manual changes to the camera's transform
+    camera.position.set( 3, 3, 3 );
+    controls.update();
+
+    const geometry = new THREE.CylinderGeometry(0.37,0.37,0.45);
+    const material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+    this.robotModel = new THREE.Mesh( geometry, material );
+    body.scene.add( this.robotModel );
+
+    // const wheel_geometry = new THREE.CylinderGeometry(0.37,0.37,0.1);
+    // const wheel_material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+    // this.wheel = new THREE.Mesh( wheel_geometry, wheel_material );
+    // body.scene.add( this.wheel );
+    // this.wheel.rotateX(3.14/2);
+
+    function animate() {
+
+      requestAnimationFrame( animate );
+
+      // required if controls.enableDamping or controls.autoRotate are set to true
+      controls.update();
+
+      renderer.render( body.scene, camera );
+
+    }
+    animate();
+    
+    this.threeDiv.nativeElement.appendChild( renderer.domElement );
+
+  }
 
   checkBoxChecked(value){
     this.cost += value;
@@ -46,17 +100,44 @@ export class AppComponent {
     }
   }
   addSelectedComponent($event){
+    var body = this;
     if ($event["type"] != "sub"){
       this.selectedComponents[$event["dictName"]] = {
                                          name: $event["name"],
                                          x: $event["x"]/10000,
                                          y: $event["y"]/10000,
-                                         z: $event["y"]/10000,
+                                         z: $event["z"]/10000,
                                          customName: $event["customName"]};
     } else {
       delete this.selectedComponents[$event["dictName"]];
+      body.scene.remove(this.wheels[$event["dictName"]]);
+      delete this.wheels[$event["dictName"]];
+
     }
     console.log(this.selectedComponents)
+    for(let component in this.selectedComponents){
+      if(this.selectedComponents[component]["name"] == "Wheel"){
+        if(this.wheels[component] == undefined){
+          console.log(component)
+          const wheel_geometry = new THREE.CylinderGeometry(0.205,0.205,0.05, 100);
+          const wheel_material = new THREE.MeshPhongMaterial( { color: 0x03ecfc } );
+          const wheel = new THREE.Mesh( wheel_geometry, wheel_material );
+          wheel.rotateX(3.14/2);
+          
+          this.wheels[component] = wheel;
+            
+          console.log(this.wheels[component]);
+          console.log(this.wheels);
+          console.log(body.scene);
+          
+          body.scene.add( this.wheels[component] );
+        }
+        this.wheels[component].position.x = this.selectedComponents[component].x * 10;
+        this.wheels[component].position.y = this.selectedComponents[component].y * 10;
+        this.wheels[component].position.z = this.selectedComponents[component].z * 10;
+        
+      }
+    }
   }
   export(){
     var proto_code = `
