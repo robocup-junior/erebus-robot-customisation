@@ -14,6 +14,10 @@ export class SliderComponent {
     x: number = 0;
     y: number = 0;
     z: number = 0;
+    rx: number = 0;
+    ry: number = 0;
+    rz: number = 0;
+    a: number = 0;
     name: string = "";
     customName: string = "";
 
@@ -43,7 +47,7 @@ export class SliderComponent {
 
     specificValue($event, slider: string){
         var newVal = parseInt($event.target.value);
-        if ($event.target.value != "" && newVal >= 0 && newVal <= 100){
+        if ($event.target.value != "" && newVal >= -370 && newVal <= 370){
             if (slider == 'x'){
                 this.x = newVal;
             }
@@ -58,6 +62,25 @@ export class SliderComponent {
         
     }
 
+    valueChange($event, slider: string){
+        var newVal = parseFloat($event.target.value);
+        if ($event.target.value != ""){
+            if (slider == 'x'){
+                this.rx = newVal;
+            }
+            else if (slider == 'y'){
+                this.ry = newVal;
+            }
+            else if (slider == 'z'){
+                this.rz = newVal;
+            }
+            else if (slider == 'a'){
+                this.a = newVal;
+            }
+            this.emitComponent();
+        }
+    }
+
     emitComponent(){
         this.component.emit({
             dictName: this.name,
@@ -65,6 +88,10 @@ export class SliderComponent {
             customName: this.customName, 
             x: this.x,
             y: this.y,
-            z: this.z});
+            z: this.z,
+            rx: this.rx,
+            ry: this.ry,
+            rz: this.rz,
+            a: this.a});
     }
 }

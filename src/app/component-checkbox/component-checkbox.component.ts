@@ -61,7 +61,8 @@ export class CheckBoxComponent {
 
     specificValue($event, slider: string): void{
         var newVal = parseInt($event.target.value);
-        if ($event.target.value != "" && newVal >= 0 && newVal <= 100){
+        console.log(newVal);
+        if ($event.target.value != "" && newVal >= -370 && newVal <= 370){
             if (slider == 'x'){
                 this.x = newVal;
             }

@@ -5,6 +5,9 @@
 <br>
 <label>Z: </label><input type="range" max="370" min="-370" value="{{z}}" (input)="sliderChange($event, 'z')"><input value="{{z}}" (keyup)="specificValue($event,'z')">
 <br>
+<label>Rotation: </label><input value="{{rx}}" (keyup)="valueChange($event, 'x')"><input value="{{ry}}" (keyup)="valueChange($event, 'y')"><input value="{{rz}}" (keyup)="valueChange($event, 'z')"><input value="{{a}}" (keyup)="valueChange($event, 'a')">
+<br>
+
 <!-- <label>Rotation: </label><input type="range" max="6" min="0" value="0" (input)="sliderChange($event, 'y')"> 
 <br> -->
 <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
