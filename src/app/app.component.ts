@@ -52,6 +52,7 @@ export class AppComponent implements AfterViewInit {
 
     const geometry = new THREE.CylinderGeometry(0.37,0.37,0.45,100);
     const texture = new THREE.TextureLoader().load("./../assets/textures/top.png");
+    texture.rotation = 0;
     const top_material = new THREE.MeshPhongMaterial( { map: texture} );
     const side_material = new THREE.MeshPhongMaterial( { color: 0xffffff, opacity: 0.5,
       transparent: true,} );
@@ -152,13 +153,15 @@ export class AppComponent implements AfterViewInit {
         }
         console.log(this.selectedComponents[component].rx , this.selectedComponents[component].a)
 
-        var eulerRot = new THREE.Euler(this.selectedComponents[component].rx * this.selectedComponents[component].a,
-                                      this.selectedComponents[component].ry * this.selectedComponents[component].a,
-                                      this.selectedComponents[component].rz * this.selectedComponents[component].a) 
+        var eulerRot = new THREE.Euler(0,0,0);
+        
+        var rotationVector = new THREE.Vector3(this.selectedComponents[component].rx,this.selectedComponents[component].ry,this.selectedComponents[component].rz);
 
         this.wheels[component].rotation.x = eulerRot.x;
         this.wheels[component].rotation.y = eulerRot.y;
         this.wheels[component].rotation.z = eulerRot.z;
+
+        this.wheels[component].rotateOnAxis(rotationVector.normalize(), this.selectedComponents[component].a);
 
         this.wheels[component].position.x = this.selectedComponents[component].x * 10;
         this.wheels[component].position.y = this.selectedComponents[component].y * 10;
