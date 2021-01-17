@@ -1,18 +1,21 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Device } from '../device';
 
 @Component({
   selector: 'app-component-checkbox',
   templateUrl: './component-checkbox.component.html',
   styleUrls: ['./component-checkbox.component.css']
 })
+
 export class CheckBoxComponent {
-    @Input() type: String;
+    @Input() type: string;
     @Input() cost: number;
-    @Input() name: String;
-    @Input() dictName: String;
+    @Input() name: string;
+    @Input() dictName: string;
     @Input() totalCost: number;
     @Input() budget: number;
+    @Input() customName: string;
 
     @Output() outputCost = new EventEmitter<number>();
     @Output() component = new EventEmitter<any>()
@@ -20,11 +23,17 @@ export class CheckBoxComponent {
 
     check = new Subject<CheckBoxComponent>();
 
-    checked = false;
+    checked: boolean = false;
     x: number = 0.0;
     y: number = 0.0;
     z: number = 0.0;
-    customName: string = "";
+    rx: number = 0;
+    ry: number = 0;
+    rz: number = 0;
+    a: number = 0;
+
+    min: number = -370;
+    max: number = 370;
 
     click($event): void{
         if ($event.target.checked){
@@ -44,38 +53,15 @@ export class CheckBoxComponent {
         
     }
 
-    sliderChange($event, slider: string): void{
-        if (slider == 'x'){
-            this.x = parseInt($event.target.value);
-        }
-        else if (slider == 'y'){
-            this.y = parseInt($event.target.value);
-        }
-        else if (slider == 'z'){
-            this.z = parseInt($event.target.value);
-        }
-        if (this.checked){
-            this.emitComponent("add");
-        }
-    }
-
-    specificValue($event, slider: string): void{
-        var newVal = parseInt($event.target.value);
-        console.log(newVal);
-        if ($event.target.value != "" && newVal >= -370 && newVal <= 370){
-            if (slider == 'x'){
-                this.x = newVal;
-            }
-            else if (slider == 'y'){
-                this.y = newVal;
-            }
-            else if (slider == 'z'){
-                this.z = newVal;
-            }
-            if (this.checked){
-                this.emitComponent("add");
-            }
-        }
+    updatePosition($event){
+        this.x = $event.x;
+        this.y = $event.y;
+        this.z = $event.z;
+        this.rx = $event.rx;
+        this.ry = $event.ry;
+        this.rz = $event.rz;
+        this.a = $event.a;
+        this.emitComponent("add")
     }
 
     updateName($event){
@@ -83,18 +69,8 @@ export class CheckBoxComponent {
         this.emitComponent("add");
     }
 
-    updateSlider($event){
-        console.log($event,"updateSlider")
-    }
-
     emitComponent(type: string){
-        this.component.emit({
-            dictName: this.dictName,
-            name: this.name,
-            customName: this.customName, 
-            type:type,
-            x: this.x,
-            y: this.y,
-            z: this.z});
+        let device = new Device(this.dictName, this.name, this.customName, type, this.x, this.y, this.z, this.rx, this.ry, this.rz, this.a);
+        this.component.emit(device);
     }
 }

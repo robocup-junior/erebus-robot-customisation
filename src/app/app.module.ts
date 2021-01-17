@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CheckBoxComponent } from './component-checkbox/component-checkbox.component';
 import { SliderComponent } from './component-slider/component-slider.component';
+import { PositionRotationComponent } from './position-rot-inputs/position-rot.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CheckBoxComponent,
-    SliderComponent
+    SliderComponent,
+    PositionRotationComponent
   ],
   imports: [
     BrowserModule,

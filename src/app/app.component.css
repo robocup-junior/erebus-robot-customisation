@@ -1,0 +1,21 @@
+table{
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* #three{
+    position: 'absolute';
+    top: 0px; 
+} */
+
+#bottomRow{
+    vertical-align: top;
+}
+
+#info{
+    text-align: center;
+}
+
+#three{
+    text-align: left;
+}

@@ -1,13 +1,5 @@
-<p>{{displayName}} {{number}}</p>
-<label>X: </label><input type="range" max="370" min="-370" value="{{x}}" (input)="sliderChange($event, 'x')"><input value="{{x}}" (keyup)="specificValue($event,'x')">
-<br>
-<label>Y: </label><input type="range" max="370" min="-370" value="{{y}}" (input)="sliderChange($event, 'y')"><input value="{{y}}" (keyup)="specificValue($event,'y')">
-<br>
-<label>Z: </label><input type="range" max="370" min="-370" value="{{z}}" (input)="sliderChange($event, 'z')"><input value="{{z}}" (keyup)="specificValue($event,'z')">
-<br>
-<label>Rotation: </label><input value="{{rx}}" (keyup)="valueChange($event, 'x')"><input value="{{ry}}" (keyup)="valueChange($event, 'y')"><input value="{{rz}}" (keyup)="valueChange($event, 'z')"><input value="{{a}}" (keyup)="valueChange($event, 'a')">
-<br>
-
-<!-- <label>Rotation: </label><input type="range" max="6" min="0" value="0" (input)="sliderChange($event, 'y')"> 
-<br> -->
+<p><b>{{name}} {{number}}</b></p>
+<app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
 <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
+<br>
+<br>

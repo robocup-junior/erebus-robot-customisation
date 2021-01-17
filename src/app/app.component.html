@@ -1,38 +1,50 @@
 <body>
-  <table style="width:100%">
+  <table>
     <tr>
-      <td>
+      <td id='info' colspan="3">
         <h1>
           Robot Customisation
         </h1>
-        <button (click)="export()">Export</button>
-        <h2>
+        <h1>
           Budget: {{budget}}
-        </h2>
-        <h2 class="cost">
+        </h1>
+        <h1 class="cost">
           Cost: {{cost}}
-        </h2>
-
+        </h1>
+        <button (click)="export()">Export</button>
+        <br>
+      </td>
+      <td colspan="3" id='three'>
+        <div  #three></div>
+      </td>
+    </tr>
+    <tr id='bottomRow'>
+      <td colspan="2">
         <h2>Sensors:</h2>
         <div *ngFor="let item of components">
-          <app-component-checkbox [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addSelectedComponent($event)"></app-component-checkbox>
+          <app-component-checkbox [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addSelectedComponent($event)"></app-component-checkbox>
         </div>
         <br>
-        <h2>Distance Sensors:</h2>
+      </td>
+      <td colspan="2">
+        <h2>Distance Sensors ({{distCost}}): </h2>
         <label>Number of Distance Sensors</label><input type="range" max="8" min="0" value="{{numberOfDists}}" (input)="onDistSliderChange($event)"> 
-        <div *ngFor="let dist of distsIterator; let j = index">
-          <app-component-slider [displayName]="'Sensor'" [number]="j + 1" (component)="addSelectedComponent($event)"></app-component-slider>
-        </div>
         <br>
-        <h2>Wheels:</h2>
-        <label>Number of Wheels</label><input type="range" max="4" min="1" value="{{numberOfWheels}}" (input)="onWheelSliderChange($event)"> 
-        <div *ngFor="let item of wheelsIterator; let i = index">
-          <app-component-slider [displayName]="'Wheel'" [number]="i + 1" (component)="addSelectedComponent($event)"></app-component-slider>
+        <br>
+        <div *ngFor="let dist of distsIterator; let j = index">
+          <app-component-slider [name]="'Sensor'" [number]="j + 1" (component)="addSelectedComponent($event)"></app-component-slider>
         </div>
       </td>
-      <td>
-        <div #three></div>
+      <td colspan="2">
+        <h2>Wheels ({{wheelCost}}):</h2>
+        <label>Number of Wheels</label><input type="range" max="4" min="1" value="{{numberOfWheels}}" (input)="onWheelSliderChange($event)"> 
+        <br>
+        <br>
+        <div *ngFor="let item of wheelsIterator; let i = index">
+          <app-component-slider [name]="'Wheel'" [number]="i + 1" (component)="addSelectedComponent($event)"></app-component-slider>
+        </div>
       </td>
+      
     </tr>
   </table>
   
