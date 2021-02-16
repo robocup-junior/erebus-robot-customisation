@@ -1,5 +1,15 @@
-<p><b>{{name}} {{number}}</b></p>
+<!-- <p><b>{{name}} {{number}}</b></p>
 <app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
 <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
 <br>
-<br>
+<br> -->
+
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <b>{{name}} {{number}}</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
+    <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
+</mat-expansion-panel>

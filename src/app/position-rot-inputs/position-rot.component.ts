@@ -42,13 +42,13 @@ export class PositionRotationComponent {
 
     sliderChange($event, slider: string): void{
         if (slider == 'x'){
-            this.x = parseInt($event.target.value);
+            this.x = parseInt($event.value);
         }
         else if (slider == 'y'){
-            this.y = parseInt($event.target.value);
+            this.y = parseInt($event.value);
         }
         else if (slider == 'z'){
-            this.z = parseInt($event.target.value);
+            this.z = parseInt($event.value);
         }
         this.emitInfo();
     }

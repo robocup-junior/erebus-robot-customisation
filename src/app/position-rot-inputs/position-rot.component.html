@@ -1,10 +1,10 @@
-<label>X: </label><input type="range" max="{{maxPositionX}}" min="{{minPositionX}}" value="{{x}}" (input)="sliderChange($event, 'x')">
+<label>X: </label><mat-slider type="range" max="{{maxPositionX}}" min="{{minPositionX}}" value="{{x}}" (input)="sliderChange($event, 'x')"></mat-slider>
 <input type="number" step="{{positionStep}}" value="{{x}}" (keyup)="specificValue($event,'x')" (change)="specificValue($event,'x')">
 <br>
-<label>Y: </label><input type="range" max="{{maxPositionY}}" min="{{minPositionY}}" value="{{y}}" (input)="sliderChange($event, 'y')">
+<label>Y: </label><mat-slider type="range" max="{{maxPositionY}}" min="{{minPositionY}}" value="{{y}}" (input)="sliderChange($event, 'y')"></mat-slider>
 <input type="number" step="{{positionStep}}" value="{{y}}" (keyup)="specificValue($event,'y')" (change)="specificValue($event,'y')">
 <br>
-<label>Z: </label><input type="range" max="{{maxPositionZ}}" min="{{minPositionZ}}" value="{{z}}" (input)="sliderChange($event, 'z')">
+<label>Z: </label><mat-slider type="range" max="{{maxPositionZ}}" min="{{minPositionZ}}" value="{{z}}" (input)="sliderChange($event, 'z')"></mat-slider>
 <input type="number" step="{{positionStep}}" value="{{z}}" (keyup)="specificValue($event,'z')" (change)="specificValue($event,'z')">
 <br>
 <div id="rotationGridContainer">

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output,ViewChild} from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { Subject } from 'rxjs';
 import { Device } from '../device';
 
@@ -9,6 +10,8 @@ import { Device } from '../device';
 })
 
 export class CheckBoxComponent {
+    @ViewChild(MatExpansionPanel) expPanel: MatExpansionPanel;
+
     @Input() type: string;
     @Input() cost: number;
     @Input() name: string;
@@ -24,6 +27,7 @@ export class CheckBoxComponent {
     check = new Subject<CheckBoxComponent>();
 
     checked: boolean = false;
+    disabled: boolean = false;
     x: number = 0.0;
     y: number = 0.0;
     z: number = 0.0;
@@ -35,17 +39,35 @@ export class CheckBoxComponent {
     min: number = -370;
     max: number = 370;
 
+    withinBudget(totalCost){
+        return totalCost + this.cost <= this.budget
+    }
+
+    ngOnChanges(changes) {
+        this.disableCheckBox(changes.totalCost.currentValue);
+    }
+
+    disableCheckBox(totalCost){
+        if(!this.withinBudget(totalCost) && !this.checked){
+            this.disabled = true;
+        } else {
+            this.disabled = false;
+        }
+    }
+
     click($event): void{
-        if ($event.target.checked){
-            if (this.totalCost + this.cost > this.budget){
+        if ($event.checked){
+            if (!this.withinBudget(this.totalCost)){
                 this.checked = false
-                $event.target.checked = false;
+                // $event.checked = false;
             } else {
                 this.checked = true
+                this.expPanel.open();
                 this.outputCost.emit(this.cost);
                 this.emitComponent("add");
             }
         } else {
+            this.expPanel.close();
             this.checked = false;
             this.outputCost.emit(-this.cost);
             this.emitComponent("sub");

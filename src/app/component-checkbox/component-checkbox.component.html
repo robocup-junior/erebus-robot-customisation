@@ -1,4 +1,4 @@
-<label>{{name}} ({{cost}}) :</label><input [checked]="checked" (change)="click($event)" type="{{type}}">
+<!-- <mat-checkbox [checked]="checked" (change)="click($event)" [disabled]="disabled">{{name}} ({{cost}}) </mat-checkbox>
 <div *ngIf="checked == true">
     <app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
     <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
@@ -6,4 +6,15 @@
     <br>
 </div>
 <br *ngIf="checked == false">
-<br *ngIf="checked == false">
+<br *ngIf="checked == false"> -->
+
+
+<mat-expansion-panel [disabled]="disabled || !checked">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-checkbox [checked]="checked" (change)="click($event)" [disabled]="disabled">{{name}} ({{cost}}) </mat-checkbox>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
+    <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
+</mat-expansion-panel>

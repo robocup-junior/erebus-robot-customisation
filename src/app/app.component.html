@@ -1,3 +1,4 @@
+
 <body>
   <table>
     <tr>
@@ -11,7 +12,11 @@
         <h1 class="cost">
           Cost: {{cost}}
         </h1>
-        <button (click)="export()">Export</button>
+        <div id="file">
+          <label>File Name: </label>
+          <input id="fileNameInput" value="{{fileName}}" (keyup)="changeFileName($event)">
+          <button mat-raised-button color="primary" (click)="export()">Export</button>
+        </div>
         <br>
       </td>
       <td colspan="3" id='three'>
@@ -28,7 +33,7 @@
       </td>
       <td colspan="2">
         <h2>Distance Sensors ({{distCost}}): </h2>
-        <label>Number of Distance Sensors</label><input type="range" max="8" min="0" value="{{numberOfDists}}" (input)="onDistSliderChange($event)"> 
+        <label>Number of Distance Sensors</label><mat-slider type="range" max="8" min="0" value="{{numberOfDists}}" (input)="onDistSliderChange($event)"> </mat-slider>
         <br>
         <br>
         <div *ngFor="let dist of distsIterator; let j = index">
@@ -37,7 +42,7 @@
       </td>
       <td colspan="2">
         <h2>Wheels ({{wheelCost}}):</h2>
-        <label>Number of Wheels</label><input type="range" max="4" min="1" value="{{numberOfWheels}}" (input)="onWheelSliderChange($event)"> 
+        <label>Number of Wheels</label><mat-slider type="range" max="4" min="1" value="{{numberOfWheels}}" (input)="onWheelSliderChange($event)"></mat-slider>
         <br>
         <br>
         <div *ngFor="let item of wheelsIterator; let i = index">

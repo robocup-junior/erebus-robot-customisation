@@ -1,3 +1,21 @@
 input[type="number"]{
     width: 50px;
 }
+
+input{
+    font-size: 14px;
+    padding-left: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+input:focus {
+    border: 1px solid rgb(42, 130, 230);
+}
+
+mat-expansion-panel{
+    margin-bottom: 20px;
+}

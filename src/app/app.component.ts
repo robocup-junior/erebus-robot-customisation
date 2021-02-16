@@ -44,6 +44,8 @@ export class AppComponent implements AfterViewInit {
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
 
+  fileName: string = "MyAwesomeRobot";
+
   // Create THREE.js view
   ngAfterViewInit() {
     /*
@@ -111,6 +113,10 @@ export class AppComponent implements AfterViewInit {
     
   }
 
+  changeFileName($event){
+    this.fileName = $event.target.value;
+  }
+
   checkBoxChecked(value){
     this.cost += value;
   }
@@ -120,9 +126,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   onWheelSliderChange($event) {
-    if (this.withinBudget((parseInt($event.target.value) * this.wheelCost) - (this.previousWheelNumber * this.wheelCost))){
+    if (this.withinBudget((parseInt($event.value) * this.wheelCost) - (this.previousWheelNumber * this.wheelCost))){
       this.previousWheelNumber = this.numberOfWheels;
-      this.numberOfWheels = parseInt($event.target.value);
+      this.numberOfWheels = parseInt($event.value);
       this.wheelsIterator = Array(this.numberOfWheels).fill(0);
       if (this.previousWheelNumber - this.numberOfWheels > 0){
         //decreased slider
@@ -133,15 +139,15 @@ export class AppComponent implements AfterViewInit {
       this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
     } else {
       this.previousWheelNumber = this.numberOfWheels;
-      $event.target.value = this.previousWheelNumber;
+      $event.value = this.previousWheelNumber;
     }
     
   }
   
   onDistSliderChange($event) {
-    if (this.withinBudget((parseInt($event.target.value) * this.distCost) - (this.previousDistNumber * this.distCost))){
+    if (this.withinBudget((parseInt($event.value) * this.distCost) - (this.previousDistNumber * this.distCost))){
       this.previousDistNumber = this.numberOfDists;
-      this.numberOfDists = parseInt($event.target.value);
+      this.numberOfDists = parseInt($event.value);
       this.distsIterator = Array(this.numberOfDists).fill(0);
       if (this.previousDistNumber - this.numberOfDists > 0){
         //decreased slider
@@ -151,7 +157,7 @@ export class AppComponent implements AfterViewInit {
       this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
     } else {
       this.previousDistNumber = this.numberOfDists;
-      $event.target.value = this.previousDistNumber;
+      $event.value = this.previousDistNumber;
     }
   }
 
@@ -1132,7 +1138,7 @@ export class AppComponent implements AfterViewInit {
     `
     proto_code += "\n}"
     proto_code += closeBracket;
-    this.download("robot.proto",proto_code);
+    this.download(this.fileName+".proto",proto_code);
     console.log(proto_code);
 
   }

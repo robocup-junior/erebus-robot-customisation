@@ -9,6 +9,16 @@ import { CheckBoxComponent } from './component-checkbox/component-checkbox.compo
 import { SliderComponent } from './component-slider/component-slider.component';
 import { PositionRotationComponent } from './position-rot-inputs/position-rot.component';
 
+import { MatSliderModule } from '@angular/material/slider';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatInputModule} from '@angular/material/input';
+
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +30,13 @@ import { PositionRotationComponent } from './position-rot-inputs/position-rot.co
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    CommonModule
+    CommonModule,
+    
+    MatSliderModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatExpansionModule,
+    MatInputModule
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent]

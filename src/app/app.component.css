@@ -2,12 +2,15 @@ table{
     width: 100%;
     table-layout: fixed;
 }
+td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
 
 /* #three{
     position: 'absolute';
     top: 0px; 
 } */
-
 #bottomRow{
     vertical-align: top;
 }
@@ -19,3 +22,21 @@ table{
 #three{
     text-align: left;
 }
+#file {
+}
+
+#fileNameInput {
+    height: 36px;
+    margin-right: 10px;
+    font-size: 14px;
+    padding-left: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+#fileNameInput:focus {
+    border: 1px solid rgb(42, 130, 230);
+  }
