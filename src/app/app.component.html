@@ -1,29 +1,28 @@
 
 <body>
   <table>
-    <tr>
+    <tr><br></tr>
+    <tr id='bottomRow'>
       <td id='info' colspan="3">
         <h1>
           Robot Customisation
         </h1>
-        <h1>
+        <h2 class="budget">
           Budget: {{budget}}
-        </h1>
-        <h1 class="cost">
+        </h2>
+        <h2 class="budget">
           Cost: {{cost}}
-        </h1>
+        </h2>
+        <div id="threeCanvus">
+          <div #three></div>
+        </div>
         <div id="file">
           <label>File Name: </label>
-          <input id="fileNameInput" value="{{fileName}}" (keyup)="changeFileName($event)">
+          <input #fileNameInput id="fileNameInput" value="{{fileName}}">
           <button mat-raised-button color="primary" (click)="export()">Export</button>
         </div>
         <br>
       </td>
-      <td colspan="3" id='three'>
-        <div  #three></div>
-      </td>
-    </tr>
-    <tr id='bottomRow'>
       <td colspan="2">
         <h2>Sensors:</h2>
         <div *ngFor="let item of components">

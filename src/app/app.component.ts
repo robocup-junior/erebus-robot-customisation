@@ -33,6 +33,8 @@ export class AppComponent implements AfterViewInit {
   selectedDevices = {};
 
   @ViewChild('three') threeDiv: ElementRef;  
+  @ViewChild('fileNameInput') fileNameField;  
+  
   robotModel: THREE.Mesh;
   deviceModels = {};
   scene = new THREE.Scene();
@@ -54,7 +56,7 @@ export class AppComponent implements AfterViewInit {
     
     let body = this;
 
-    let width = 800;
+    let width = 600;
     let height = 500;
     
     init();
@@ -1138,7 +1140,7 @@ export class AppComponent implements AfterViewInit {
     `
     proto_code += "\n}"
     proto_code += closeBracket;
-    this.download(this.fileName+".proto",proto_code);
+    this.download(this.fileNameField.nativeElement.value+".proto",proto_code);
     console.log(proto_code);
 
   }

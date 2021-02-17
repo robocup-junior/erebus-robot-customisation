@@ -6,6 +6,16 @@ td {
     padding-left: 10px;
     padding-right: 10px;
 }
+h1 {
+    font-size: 40px;
+}
+#threeCanvus {
+    position: relative;
+}
+.budget {
+    font-size: 24px;
+    font-weight: bold;
+}
 
 /* #three{
     position: 'absolute';
@@ -16,7 +26,7 @@ td {
 }
 
 #info{
-    text-align: center;
+    /* text-align: center; */
 }
 
 #three{
@@ -39,4 +49,4 @@ td {
 
 #fileNameInput:focus {
     border: 1px solid rgb(42, 130, 230);
-  }
+}

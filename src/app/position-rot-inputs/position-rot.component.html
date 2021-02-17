@@ -7,13 +7,16 @@
 <label>Z: </label><mat-slider type="range" max="{{maxPositionZ}}" min="{{minPositionZ}}" value="{{z}}" (input)="sliderChange($event, 'z')"></mat-slider>
 <input type="number" step="{{positionStep}}" value="{{z}}" (keyup)="specificValue($event,'z')" (change)="specificValue($event,'z')">
 <br>
-<div id="rotationGridContainer">
-    <label>Angle-Axis Rotation: </label>
+<label>Angle-Axis Rotation: </label>
+<div id="rotationAngleAxisContainer">
     <div>X: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{rx}}" (change)="axisAngleChange($event, 'x')" (keyup)="axisAngleChange($event, 'x')" ></div>
     <div>Y: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{ry}}" (change)="axisAngleChange($event, 'y')" (keyup)="axisAngleChange($event, 'y')"></div>
     <div>Z: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{rz}}" (change)="axisAngleChange($event, 'z')" (keyup)="axisAngleChange($event, 'z')"></div>
     <div>Angle: <input type="number" step="{{angleStep}}" value="{{a}}" (change)="axisAngleChange($event, 'a')" (keyup)="axisAngleChange($event, 'a')"></div>
-    <label>Euler Rotation: </label>
+</div>
+<br>
+<label>Euler Rotation: </label>
+<div id="rotationEulerContainer">
     <div>X: <input type="number" step="{{angleStep}}" value="{{ex}}" (change)="changeAngle($event, 'x')" (keyup)="changeAngle($event, 'x')" ></div>
     <div>Y: <input type="number" step="{{angleStep}}" value="{{ey}}" (change)="changeAngle($event, 'y')" (keyup)="changeAngle($event, 'y')"></div>
     <div>Z:<input type="number" step="{{angleStep}}" value="{{ez}}" (change)="changeAngle($event, 'z')" (keyup)="changeAngle($event, 'z')"></div>
