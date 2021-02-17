@@ -1070,9 +1070,14 @@ export class AppComponent implements AfterViewInit {
       }
       if(this.selectedDevices[component]["name"]== "Lidar") {
         proto_code += `
-        Lidar {
+        Transform {
           translation ${x} ${y} ${z}
           rotation ${this.selectedDevices[component]["rx"]} ${this.selectedDevices[component]["ry"]} ${this.selectedDevices[component]["rz"]} ${this.selectedDevices[component]["a"]}
+          children [
+            Lidar {
+              rotation 0 1 0 -1.57
+            }
+          ]
         }`;
       }
       
