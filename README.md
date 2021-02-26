@@ -1,8 +1,29 @@
-# RobotCustomisation
+# Robot Customisation
+
+Robot customiser and generator for RoboCupJunior 2021
+
+![Example of app](docs/page.png)
+
+## Features
+
+### Components
+
+All components can be positioned and rotated anywhere around the robot.  
+They can also be given custom names so they can be easily accessed in your code.  
+
+- GPS
+- Gyro
+- Heat Sensor (x2)
+- Camera (x2)
+- Colour Sensor
+- Accelerometer
+- Lidar Sensor
+- Distance Sensors (up to 8)
+
 
 ## TODO
- - [ ] Add finalised Lidar properties 
-  
+
+- [x] Add finalised Lidar properties  
 
 ---
 
