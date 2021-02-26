@@ -8,8 +8,9 @@
     <mat-expansion-panel-header>
       <mat-panel-title>
         <b>{{name}} {{number}}</b>
+        <!-- [minPositionX]="{{maxNumber}}" [maxPositionX]="{{maxNumber}}" [minPositionZ]="{{maxNumber}}" [maxPositionZ]="{{maxNumber}}" -->
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
+    <app-position-rot minPositionX="{{-maxNumber}}" maxPositionX="{{maxNumber}}" minPositionZ="{{-maxNumber}}" maxPositionZ="{{maxNumber}}" (pos_rot)="updatePosition($event)"></app-position-rot>
     <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
 </mat-expansion-panel>

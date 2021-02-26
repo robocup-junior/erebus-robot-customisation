@@ -11,9 +11,10 @@ import { Device } from '../device';
 export class SliderComponent {
     @Input() number: number;
     @Input() name: string;
-
+    @Input() zxmax: number;
+    
     @Output() component = new EventEmitter<any>();
-
+    
     x: number = 0;
     y: number = 0;
     z: number = 0;
@@ -24,13 +25,16 @@ export class SliderComponent {
     
     dictName: string = "";
     customName: string = "";
+    maxNumber: number;
 
     ngOnInit(){
         this.dictName = this.name+" "+this.number.toString();
         this.customName = this.name.toLowerCase()+this.number;
+        this.maxNumber = this.zxmax;
+        console.log(this.maxNumber)
         this.emitComponent();
     }
-
+    
     updateName($event){
         this.customName = $event.target.value;
         this.emitComponent();

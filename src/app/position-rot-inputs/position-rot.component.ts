@@ -24,11 +24,13 @@ export class PositionRotationComponent {
     ey: number = 0;
     ez: number = 0;
 
-    @Input() minPositionX: number = -370;
-    @Input() maxPositionX: number = 370;
-
+    
     @Input() minPositionY: number = -100;
     @Input() maxPositionY: number = 370;
+
+    
+    @Input() minPositionX: number = -370;
+    @Input() maxPositionX: number = 370;
 
     @Input() minPositionZ: number = -370;
     @Input() maxPositionZ: number = 370;
