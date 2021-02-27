@@ -153,8 +153,8 @@ export class AppComponent implements AfterViewInit {
       this.distsIterator = Array(this.numberOfDists).fill(0);
       if (this.previousDistNumber - this.numberOfDists > 0){
         //decreased slider
-        this.selectedDevices["Sensor " + this.previousDistNumber].type = "sub";
-        this.addSelectedComponent(this.selectedDevices["Sensor " + this.previousDistNumber]);
+        this.selectedDevices["Distance Sensor " + this.previousDistNumber].type = "sub";
+        this.addSelectedComponent(this.selectedDevices["Distance Sensor " + this.previousDistNumber]);
       }
       this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
     } else {
@@ -1046,7 +1046,7 @@ export class AppComponent implements AfterViewInit {
         }
         `;
       }
-      if(this.selectedDevices[component]["name"] == "Sensor"){
+      if(this.selectedDevices[component]["name"] == "Distance Sensor"){
         proto_code += `
         DistanceSensor {
           translation ${x} ${y} ${z}
