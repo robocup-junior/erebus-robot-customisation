@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { Device } from './device';
 import { $ } from 'protractor';
+// import * as cjson from 'compressed-json';
 
 @Component({
   selector: 'app-root',
@@ -56,15 +57,15 @@ export class AppComponent implements AfterViewInit {
     
     let body = this;
 
-    let width = 600;
-    let height = 500;
+    let width_ratio = 3.2;
+    let height_ratio = 2.16;
     
     init();
     animate();
 
     function init(){
 
-      body.camera = new THREE.PerspectiveCamera( 45, width / height, 0.1, 200 );
+      body.camera = new THREE.PerspectiveCamera( 45, (window.innerWidth/width_ratio) / (window.innerHeight/height_ratio), 0.1, 200 );
       body.camera.position.set( 1, 1, 1 );
       
       const skyColor = 0xFFFFFF;  // light blue
@@ -88,11 +89,11 @@ export class AppComponent implements AfterViewInit {
 
       body.renderer = new THREE.WebGLRenderer();
       body.renderer.setPixelRatio( window.devicePixelRatio );
-			body.renderer.setSize( width, height );
+			body.renderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
       body.threeDiv.nativeElement.appendChild( body.renderer.domElement );
       
       body.labelRenderer = new CSS2DRenderer();
-      body.labelRenderer.setSize( width, height );
+      body.labelRenderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
       body.labelRenderer.domElement.style.position = 'absolute';
       body.labelRenderer.domElement.style.top = '0px'; 
       body.labelRenderer.domElement.style.display = 'block';
@@ -103,8 +104,17 @@ export class AppComponent implements AfterViewInit {
       // const axesHelper = new THREE.AxesHelper( 1 );
       // body.scene.add( axesHelper );
 
+      window.addEventListener( 'resize', onWindowResize, false );
 
     }
+      function onWindowResize(){
+      
+          body.camera.aspect = (window.innerWidth/width_ratio) / (window.innerHeight/height_ratio);
+          body.camera.updateProjectionMatrix();
+          body.renderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
+          body.labelRenderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
+      
+      }
 
     function animate() {
       requestAnimationFrame( animate );
@@ -180,7 +190,22 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    console.log(this.selectedDevices)
+    // console.log("asdasdasd")
+    // console.log(this.selectedDevices)
+    // let json = Object.assign({},this.selectedDevices)
+    // for(let component in json){
+    //   json[component] = {
+    //     "name": json[component].name,
+    //     "customName": json[component].customName,
+    //     "pos": [json[component].x,json[component].y,json[component].z],
+    //     "ang":[json[component].rx,json[component].ry,json[component].rz,json[component].a]
+    //   }
+    // }
+    // // console.log(json)
+    // console.log(JSON.stringify(json))
+    // console.log(JSON.stringify(cjson.compress(json)))
+    // console.log(btoa(JSON.stringify(this.selectedDevices)))
+    // console.log(btoa(JSON.stringify(cjson.compress(json))))
 
     let model = null;
 
