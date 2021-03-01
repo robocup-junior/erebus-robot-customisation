@@ -14,6 +14,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatInputModule} from '@angular/material/input';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
 
 
 
@@ -36,7 +38,8 @@ import {MatInputModule} from '@angular/material/input';
     MatCheckboxModule,
     MatButtonModule,
     MatExpansionModule,
-    MatInputModule
+    MatInputModule,
+    MatSnackBarModule
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent]

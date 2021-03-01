@@ -13,20 +13,30 @@
         <h2 class="budget">
           Cost: {{cost}}
         </h2>
-        <div id="threeCanvus">
+        <div id="threeCanvas">
           <div #three></div>
         </div>
         <div id="file">
           <label>File Name: </label>
-          <input #fileNameInput id="fileNameInput" value="{{fileName}}">
+          <input #fileNameInput class="input" value="{{fileName}}">
           <button mat-raised-button color="primary" (click)="export()">Export</button>
+          <br>
+          <br>
+          <!-- <label>Share Code: </label> -->
+          <!-- <input #shareCodeOutput class="input" value="{{shareCode}}"> -->
+          <button mat-raised-button color="primary" (click)="shareCodeToClip()">Copy Share Code to Clipboard</button>
+          <br>
+          <br>
+          <label>Share Code Input: </label>
+          <input #shareCodeInput class="input" value="">
+          <button mat-raised-button color="primary" (click)="import(shareCodeInput)">Import</button>
         </div>
         <br>
       </td>
       <td colspan="2">
         <h2>Sensors:</h2>
         <div *ngFor="let item of components">
-          <app-component-checkbox [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addSelectedComponent($event)"></app-component-checkbox>
+          <app-component-checkbox [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addSelectedComponent($event)"></app-component-checkbox>
         </div>
         <br>
       </td>
@@ -36,7 +46,7 @@
         <br>
         <br>
         <div *ngFor="let dist of distsIterator; let j = index">
-          <app-component-slider [zxmax]=370 [name]="'Distance Sensor'" [number]="j + 1" (component)="addSelectedComponent($event)"></app-component-slider>
+          <app-component-slider [values]=distanceSensorValues[j] [zxmax]=370 [name]="'Distance Sensor'" [number]="j + 1" (component)="addSelectedComponent($event)"></app-component-slider>
         </div>
       </td>
       <td colspan="2">
@@ -45,7 +55,7 @@
         <br>
         <br>
         <div *ngFor="let item of wheelsIterator; let i = index">
-          <app-component-slider [zxmax]=260 [name]="'Wheel'" [number]="i + 1" (component)="addSelectedComponent($event)"></app-component-slider>
+          <app-component-slider [values]=wheelSensorValues[i] [zxmax]=260 [name]="'Wheel'" [number]="i + 1" (component)="addSelectedComponent($event)"></app-component-slider>
         </div>
       </td>
       

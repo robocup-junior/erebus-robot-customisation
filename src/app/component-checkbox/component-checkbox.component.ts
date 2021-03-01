@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output,ViewChild} from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Subject } from 'rxjs';
+import { TubeBufferGeometry } from 'three';
 import { Device } from '../device';
 
 @Component({
@@ -20,6 +21,8 @@ export class CheckBoxComponent {
     @Input() budget: number;
     @Input() customName: string;
 
+    @Input() values;
+
     @Output() outputCost = new EventEmitter<number>();
     @Output() component = new EventEmitter<any>()
     @Output() sliderValue = new EventEmitter<number>();
@@ -28,6 +31,7 @@ export class CheckBoxComponent {
 
     checked: boolean = false;
     disabled: boolean = false;
+    collapsed = true;
     x: number = 0.0;
     y: number = 0.0;
     z: number = 0.0;
@@ -44,7 +48,21 @@ export class CheckBoxComponent {
     }
 
     ngOnChanges(changes) {
-        this.disableCheckBox(changes.totalCost.currentValue);
+        if ("values" in changes){
+            if (changes.values.currentValue != ""){
+                if (changes.values.currentValue != undefined){
+                    this.checked = true;
+                } 
+            }else {
+                this.checked = false;
+                if (this.expPanel != undefined){
+                    this.expPanel.close();
+                }
+            }
+        }
+        if ("totalCost" in changes){
+            this.disableCheckBox(changes.totalCost.currentValue);
+        }
     }
 
     disableCheckBox(totalCost){
@@ -56,6 +74,7 @@ export class CheckBoxComponent {
     }
 
     click($event): void{
+        console.log(this.check)
         if ($event.checked){
             if (!this.withinBudget(this.totalCost)){
                 this.checked = false

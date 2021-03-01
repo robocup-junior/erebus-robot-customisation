@@ -9,6 +9,8 @@ import * as THREE from 'three';
 })
 
 export class PositionRotationComponent {
+    @Input() values;
+
     @Output() pos_rot = new EventEmitter<any>();
 
     x: number = 0;
@@ -41,6 +43,21 @@ export class PositionRotationComponent {
     @Input() maxAngleAxis: number = 1;
 
     @Input() angleStep: number = 0.01;
+
+    ngOnChanges(changes){
+        console.log(changes.values.currentValue);
+        if (changes.values.currentValue != undefined && changes.values.currentValue != ""){
+            this.x = changes.values.currentValue.pos[0];
+            this.y = changes.values.currentValue.pos[1];
+            this.z = changes.values.currentValue.pos[2];
+    
+            this.rx = changes.values.currentValue.ang[0];
+            this.ry = changes.values.currentValue.ang[1];
+            this.rz = changes.values.currentValue.ang[2];
+            this.a = changes.values.currentValue.ang[3];
+            this.angleAxisToEuler()
+        }
+    }
 
     sliderChange($event, slider: string): void{
         if (slider == 'x'){

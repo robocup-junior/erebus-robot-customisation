@@ -9,7 +9,7 @@ td {
 h1 {
     font-size: 40px;
 }
-#threeCanvus {
+#threeCanvas {
     position: relative;
 }
 .budget {
@@ -35,7 +35,7 @@ h1 {
 #file {
 }
 
-#fileNameInput {
+.input {
     height: 36px;
     margin-right: 10px;
     font-size: 14px;
@@ -47,6 +47,6 @@ h1 {
     outline: none;
 }
 
-#fileNameInput:focus {
+.input:focus {
     border: 1px solid rgb(42, 130, 230);
 }

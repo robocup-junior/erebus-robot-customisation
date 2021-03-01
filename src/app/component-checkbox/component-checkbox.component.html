@@ -12,9 +12,9 @@
 <mat-expansion-panel [disabled]="disabled || !checked">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <mat-checkbox [checked]="checked" (change)="click($event)" [disabled]="disabled">{{name}} ({{cost}}) </mat-checkbox>
+        <mat-checkbox [checked]=checked (change)="click($event)" [disabled]="disabled">{{name}} ({{cost}}) </mat-checkbox>
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
+    <app-position-rot [values]=values (pos_rot)="updatePosition($event)"></app-position-rot>
     <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
 </mat-expansion-panel>

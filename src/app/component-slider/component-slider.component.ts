@@ -12,6 +12,8 @@ export class SliderComponent {
     @Input() number: number;
     @Input() name: string;
     @Input() zxmax: number;
+
+    @Input() values;
     
     @Output() component = new EventEmitter<any>();
     

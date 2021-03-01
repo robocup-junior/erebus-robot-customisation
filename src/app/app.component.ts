@@ -6,7 +6,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { Device } from './device';
 import { $ } from 'protractor';
-// import * as cjson from 'compressed-json';
+import * as cjson from 'compressed-json';
+
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {LZString} from './LZW';
 
 @Component({
   selector: 'app-root',
@@ -48,6 +51,14 @@ export class AppComponent implements AfterViewInit {
   camera: THREE.PerspectiveCamera;
 
   fileName: string = "MyAwesomeRobot";
+  shareLocalCode: string = "";
+  shareCode: string = "";
+
+  distanceSensorValues = []
+  wheelSensorValues = []
+  checkboxValues = {}
+
+  constructor(private snackBar: MatSnackBar) {}
 
   // Create THREE.js view
   ngAfterViewInit() {
@@ -144,7 +155,7 @@ export class AppComponent implements AfterViewInit {
       this.wheelsIterator = Array(this.numberOfWheels).fill(0);
       if (this.previousWheelNumber - this.numberOfWheels > 0){
         //decreased slider
-        console.log("Wheel " + this.previousWheelNumber)
+        //console.log("Wheel " + this.previousWheelNumber)
         this.selectedDevices["Wheel " + this.previousWheelNumber].type = "sub";
         this.addSelectedComponent(this.selectedDevices[ "Wheel " + this.previousWheelNumber]);
       }
@@ -181,35 +192,10 @@ export class AppComponent implements AfterViewInit {
     delete this.deviceModels[device.dictName];
   }
 
-  addSelectedComponent($event){
-    var body = this;
-    if ($event.type != "sub"){
-      this.selectedDevices[$event.dictName] = $event;
-    } else {
-      this.destoryDevice($event);
-      return;
-    }
-
-    // console.log("asdasdasd")
-    // console.log(this.selectedDevices)
-    // let json = Object.assign({},this.selectedDevices)
-    // for(let component in json){
-    //   json[component] = {
-    //     "name": json[component].name,
-    //     "customName": json[component].customName,
-    //     "pos": [json[component].x,json[component].y,json[component].z],
-    //     "ang":[json[component].rx,json[component].ry,json[component].rz,json[component].a]
-    //   }
-    // }
-    // // console.log(json)
-    // console.log(JSON.stringify(json))
-    // console.log(JSON.stringify(cjson.compress(json)))
-    // console.log(btoa(JSON.stringify(this.selectedDevices)))
-    // console.log(btoa(JSON.stringify(cjson.compress(json))))
-
+  createThreeModel(dictName){
+    let body = this;
     let model = null;
-
-    if(this.selectedDevices[$event.dictName].name == "Wheel"){
+    if(this.selectedDevices[dictName].name == "Wheel"){
       const wheel_geometry = new THREE.CylinderGeometry(0.205,0.205,0.05, 100);
       const texture = new THREE.TextureLoader().load("./../assets/textures/wheel.png");
 
@@ -232,10 +218,10 @@ export class AppComponent implements AfterViewInit {
       model = new THREE.Mesh( geometry, materials );
     }
     if (model != null){
-      if(this.deviceModels[$event.dictName] == undefined){
+      if(this.deviceModels[dictName] == undefined){
         const labelDiv = document.createElement('div');
-        labelDiv.id = this.selectedDevices[$event.dictName].customName;
-        labelDiv.textContent = this.selectedDevices[$event.dictName].customName;
+        labelDiv.id = this.selectedDevices[dictName].customName;
+        labelDiv.textContent = this.selectedDevices[dictName].customName;
         labelDiv.style.marginTop = '-1em';
         labelDiv.style.color = 'rgb(255, 255, 255)';
         labelDiv.style.padding = '2px';
@@ -243,27 +229,39 @@ export class AppComponent implements AfterViewInit {
         const deviceLabel = new CSS2DObject( labelDiv );
         deviceLabel.position.set(0, 0.05, 0);
         model.add(deviceLabel);
-        console.log(model)
-        model.name = $event.dictName;
+        //console.log(model)
+        model.name = dictName;
 
-        this.deviceModels[$event.dictName] = model; 
-        body.scene.add(this.deviceModels[$event.dictName]);
+        this.deviceModels[dictName] = model; 
+        body.scene.add(this.deviceModels[dictName]);
 
       }
 
       var eulerRot = new THREE.Euler(0,0,0);
-      var rotationVector = new THREE.Vector3(this.selectedDevices[$event.dictName].rx,this.selectedDevices[$event.dictName].ry,this.selectedDevices[$event.dictName].rz);
+      var rotationVector = new THREE.Vector3(this.selectedDevices[dictName].rx,this.selectedDevices[dictName].ry,this.selectedDevices[dictName].rz);
 
-      this.deviceModels[$event.dictName].rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
+      this.deviceModels[dictName].rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
 
-      this.deviceModels[$event.dictName].rotateOnAxis(rotationVector.normalize(), this.selectedDevices[$event.dictName].a);
-      console.log(this.deviceModels[$event.dictName].rotation)
+      this.deviceModels[dictName].rotateOnAxis(rotationVector.normalize(), this.selectedDevices[dictName].a);
+      //console.log(this.deviceModels[dictName].rotation)
 
-      this.deviceModels[$event.dictName].position.set(this.selectedDevices[$event.dictName].x / 1000, this.selectedDevices[$event.dictName].y / 1000, this.selectedDevices[$event.dictName].z / 1000);
+      this.deviceModels[dictName].position.set(this.selectedDevices[dictName].x / 1000, this.selectedDevices[dictName].y / 1000, this.selectedDevices[dictName].z / 1000);
 
       // Update label name
-      this.deviceModels[$event.dictName].children[0].element.innerHTML = this.selectedDevices[$event.dictName].customName;
+      this.deviceModels[dictName].children[0].element.innerHTML = this.selectedDevices[dictName].customName;
     }
+  }
+
+  addSelectedComponent($event){
+    var body = this;
+    if ($event.type != "sub"){
+      this.selectedDevices[$event.dictName] = $event;
+    } else {
+      this.destoryDevice($event);
+      return;
+    }
+    
+    this.createThreeModel($event.dictName);
     
   }
 
@@ -810,7 +808,7 @@ export class AppComponent implements AfterViewInit {
       let y = this.selectedDevices[component].y / 10000;
       let z = this.selectedDevices[component].z / 10000;
       y += 18.5/1000;
-      console.log(this.selectedDevices[component]["name"])
+      //console.log(this.selectedDevices[component]["name"])
       if(this.selectedDevices[component]["name"] == "Wheel"){
         proto_code += `
         HingeJoint {
@@ -1171,7 +1169,7 @@ export class AppComponent implements AfterViewInit {
     proto_code += "\n}"
     proto_code += closeBracket;
     this.download(this.fileNameField.nativeElement.value+".proto",proto_code);
-    console.log(proto_code);
+    //console.log(proto_code);
 
   }
 
@@ -1187,6 +1185,120 @@ export class AppComponent implements AfterViewInit {
     element.click();
   
     document.body.removeChild(element);
+  }
+
+  createSnackBar(message){
+    let snackBarRef = this.snackBar.open(message, '', {
+      duration: 1000,
+    });
+  }
+
+  copyCodeToClipboard(){
+    var dummy_element = document.createElement("textarea");
+    // dummy_element.style.display = 'none'
+    document.body.appendChild(dummy_element);
+    dummy_element.value = this.shareCode;
+    dummy_element.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy_element);
+  }
+
+  shareCodeToClip(){
+    console.log(this.selectedDevices)
+
+    let json = Object.assign({},this.selectedDevices)
+    for(let component in json){
+      json[component] = {
+        "name": json[component].name,
+        "customName": json[component].customName,
+        "pos": [json[component].x,json[component].y,json[component].z],
+        "ang":[json[component].rx,json[component].ry,json[component].rz,json[component].a]
+      }
+    }
+    
+    // this.shareCode = btoa(JSON.stringify(cjson.compress(json)));
+    this.shareCode = LZString.compressToBase64(JSON.stringify(cjson.compress(json)))
+
+    this.copyCodeToClipboard();
+
+    this.createSnackBar('Copied to clipboard!');
+  }
+  
+  import(inputElement){
+    
+    let json;
+    
+    try {
+      if (inputElement.value == ""){
+        this.createSnackBar('Invalid Code');
+        return
+      }
+      json = Object.assign({},cjson.decompress.fromString(LZString.decompressFromBase64(inputElement.value)))
+    } catch (error) {
+      this.createSnackBar('Invalid Code');
+      return
+    }
+
+    this.distanceSensorValues = []
+    this.wheelSensorValues = []
+    this.checkboxValues = {}
+
+    for (let c in components){
+      this.checkboxValues[components[c].dictName] = ""
+    }
+    
+    // Create new selectedDevices
+    for(let component in json){
+      let value = {
+        pos: [json[component].pos[0],json[component].pos[1],json[component].pos[2]],
+        ang: [json[component].ang[0],json[component].ang[1],json[component].ang[2],json[component].ang[3]]
+      }
+      if (json[component].name == "Distance Sensor"){
+        this.distanceSensorValues.push(value)
+      }
+      else if (json[component].name == "Wheel"){
+        this.wheelSensorValues.push(value)
+      } else {
+        for (let c in components){
+          if (components[c].dictName == component){
+            this.checkboxValues[component] = value
+            if (this.selectedDevices[component] == undefined)
+            {
+              this.cost += components[c].cost
+            }
+          }
+        }
+      }
+      json[component] = {
+        "dictName": component,
+        "name": json[component].name,
+        "customName": json[component].customName,
+        "x": json[component].pos[0],
+        "y": json[component].pos[1],
+        "z": json[component].pos[2],
+        "rx":json[component].ang[0],
+        "ry":json[component].ang[1],
+        "rz":json[component].ang[2],
+        "a":json[component].ang[3]
+      }
+    }
+
+    this.selectedDevices = json;
+
+    this.previousWheelNumber = this.numberOfWheels;
+    this.numberOfWheels = this.wheelSensorValues.length
+    this.wheelsIterator = Array(this.numberOfWheels).fill(0);
+    this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
+    
+    this.previousDistNumber = this.numberOfDists
+    this.numberOfDists = this.distanceSensorValues.length
+    this.distsIterator = Array(this.numberOfDists).fill(0);
+    this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
+
+    for (let component in this.selectedDevices){
+      this.createThreeModel(this.selectedDevices[component].dictName);
+    }
+    inputElement.value = ""
   }
   
 }
