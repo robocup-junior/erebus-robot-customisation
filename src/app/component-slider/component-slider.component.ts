@@ -41,8 +41,9 @@ export class SliderComponent {
         this.customName = $event.target.value;
         this.emitComponent();
     }
-
+    
     updatePosition($event){
+        this.customName = this.values.customName;
         this.x = $event.x;
         this.y = $event.y;
         this.z = $event.z;

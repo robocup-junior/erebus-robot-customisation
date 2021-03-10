@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output,ViewChild} from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Subject } from 'rxjs';
-import { TubeBufferGeometry } from 'three';
+import { FaceColors, TubeBufferGeometry } from 'three';
 import { Device } from '../device';
 
 @Component({
@@ -22,6 +22,7 @@ export class CheckBoxComponent {
     @Input() customName: string;
 
     @Input() values;
+    @Input() import: boolean;
 
     @Output() outputCost = new EventEmitter<number>();
     @Output() component = new EventEmitter<any>()
@@ -32,6 +33,7 @@ export class CheckBoxComponent {
     checked: boolean = false;
     disabled: boolean = false;
     collapsed = true;
+
     x: number = 0.0;
     y: number = 0.0;
     z: number = 0.0;
@@ -43,21 +45,31 @@ export class CheckBoxComponent {
     min: number = -370;
     max: number = 370;
 
+    disable(){
+        this.checked = false;
+        if (this.expPanel != undefined){
+            this.expPanel.close();
+        }
+    }
+
     withinBudget(totalCost){
         return totalCost + this.cost <= this.budget
     }
 
     ngOnChanges(changes) {
+        
+        console.log(this.customName, changes, this.import)
         if ("values" in changes){
             if (changes.values.currentValue != ""){
                 if (changes.values.currentValue != undefined){
                     this.checked = true;
                 } 
             }else {
-                this.checked = false;
-                if (this.expPanel != undefined){
-                    this.expPanel.close();
-                }
+                this.disable()
+            }
+        } else {
+            if ("import" in changes && this.checked){
+                this.disable()
             }
         }
         if ("totalCost" in changes){
@@ -95,6 +107,7 @@ export class CheckBoxComponent {
     }
 
     updatePosition($event){
+        this.customName = this.values.customName
         this.x = $event.x;
         this.y = $event.y;
         this.z = $event.z;

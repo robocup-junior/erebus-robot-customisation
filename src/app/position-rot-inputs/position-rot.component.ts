@@ -45,7 +45,6 @@ export class PositionRotationComponent {
     @Input() angleStep: number = 0.01;
 
     ngOnChanges(changes){
-        console.log(changes.values.currentValue);
         if (changes.values.currentValue != undefined && changes.values.currentValue != ""){
             this.x = changes.values.currentValue.x;
             this.y = changes.values.currentValue.y;
@@ -56,6 +55,7 @@ export class PositionRotationComponent {
             this.rz = changes.values.currentValue.rz;
             this.a = changes.values.currentValue.a;
             this.angleAxisToEuler()
+            this.emitInfo();
         }
     }
 

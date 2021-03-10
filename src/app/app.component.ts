@@ -60,8 +60,11 @@ export class AppComponent implements AfterViewInit {
   distanceSensorValues = []
   wheelSensorValues = []
   checkboxValues = {}
+  checkboxImport = {}
+  
 
-  constructor(private snackBar: MatSnackBar, private http: HttpClient) {}
+  constructor(private snackBar: MatSnackBar, private http: HttpClient) {
+  }
 
   // Create THREE.js view
   ngAfterViewInit() {
@@ -136,7 +139,10 @@ export class AppComponent implements AfterViewInit {
     }
 
     this.http.get('assets/default_position.json', {responseType: 'text'}).subscribe(data => this.importFromJson(JSON.parse(data)));
-
+    
+    for (let c in components){
+      this.checkboxImport[components[c].dictName] = true
+    }
     
   }
 
@@ -1318,6 +1324,10 @@ export class AppComponent implements AfterViewInit {
 
     for (let c in components){
       this.checkboxValues[components[c].dictName] = ""
+    }
+    
+    for (let c in components){
+      this.checkboxImport[components[c].dictName] = !this.checkboxImport[components[c].dictName]
     }
     
     // Create new selectedDevices

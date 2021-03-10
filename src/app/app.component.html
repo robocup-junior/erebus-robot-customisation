@@ -37,7 +37,7 @@
       <td colspan="2">
         <h2>Sensors:</h2>
         <div *ngFor="let item of components">
-          <app-component-checkbox [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addSelectedComponent($event)"></app-component-checkbox>
+          <app-component-checkbox [import]=checkboxImport[item.dictName] [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addSelectedComponent($event)"></app-component-checkbox>
         </div>
         <br>
       </td>
