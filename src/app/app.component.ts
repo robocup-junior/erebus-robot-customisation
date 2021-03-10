@@ -11,6 +11,9 @@ import * as cjson from 'compressed-json';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {LZString} from './LZW';
 
+import { HttpClient } from '@angular/common/http';
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -58,7 +61,7 @@ export class AppComponent implements AfterViewInit {
   wheelSensorValues = []
   checkboxValues = {}
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar, private http: HttpClient) {}
 
   // Create THREE.js view
   ngAfterViewInit() {
@@ -118,20 +121,21 @@ export class AppComponent implements AfterViewInit {
       window.addEventListener( 'resize', onWindowResize, false );
 
     }
-      function onWindowResize(){
-      
-          body.camera.aspect = (window.innerWidth/width_ratio) / (window.innerHeight/height_ratio);
-          body.camera.updateProjectionMatrix();
-          body.renderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
-          body.labelRenderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
-      
-      }
+
+    function onWindowResize(){
+      body.camera.aspect = (window.innerWidth/width_ratio) / (window.innerHeight/height_ratio);
+      body.camera.updateProjectionMatrix();
+      body.renderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
+      body.labelRenderer.setSize( (window.innerWidth/width_ratio), (window.innerHeight/height_ratio) );
+    }
 
     function animate() {
       requestAnimationFrame( animate );
       body.labelRenderer.render( body.scene, body.camera );
       body.renderer.render( body.scene, body.camera );
     }
+
+    this.http.get('assets/default_position.json', {responseType: 'text'}).subscribe(data => this.importFromJson(JSON.parse(data)));
 
     
   }
@@ -1223,6 +1227,11 @@ export class AppComponent implements AfterViewInit {
 
     this.createSnackBar('Copied to clipboard!');
   }
+
+  export_to_json(){
+    console.log(JSON.stringify(this.selectedDevices))
+    this.download(this.fileNameField.nativeElement.value+".json",JSON.stringify(this.selectedDevices));
+  }
   
   import(inputElement){
     
@@ -1299,6 +1308,67 @@ export class AppComponent implements AfterViewInit {
       this.createThreeModel(this.selectedDevices[component].dictName);
     }
     inputElement.value = ""
+  }
+
+  importFromJson(json){
+    
+    this.distanceSensorValues = []
+    this.wheelSensorValues = []
+    this.checkboxValues = {}
+
+    for (let c in components){
+      this.checkboxValues[components[c].dictName] = ""
+    }
+    
+    // Create new selectedDevices
+    for(let component in json){
+      let value = json[component]
+      if (json[component].name == "Distance Sensor"){
+        this.distanceSensorValues.push(value)
+      }
+      else if (json[component].name == "Wheel"){
+        this.wheelSensorValues.push(value)
+      } else {
+        for (let c in components){
+          if (components[c].dictName == component){
+            this.checkboxValues[component] = value
+            if (this.selectedDevices[component] == undefined)
+            {
+              this.cost += components[c].cost
+            }
+          }
+        }
+      }
+    }
+
+    this.selectedDevices = json;
+
+    this.previousWheelNumber = this.numberOfWheels;
+    this.numberOfWheels = this.wheelSensorValues.length
+    this.wheelsIterator = Array(this.numberOfWheels).fill(0);
+    this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
+    
+    this.previousDistNumber = this.numberOfDists
+    this.numberOfDists = this.distanceSensorValues.length
+    this.distsIterator = Array(this.numberOfDists).fill(0);
+    this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
+
+    for (let component in this.selectedDevices){
+      this.createThreeModel(this.selectedDevices[component].dictName);
+    }
+  }
+
+  jsonSelected($event){
+  
+    if (typeof (FileReader) !== 'undefined') {
+      let reader = new FileReader();
+  
+      reader.onload = (e) => {
+        let jsonFile = e.target.result.toString();
+        this.importFromJson(JSON.parse(jsonFile))
+      };
+      reader.readAsText($event.srcElement.files[0]);
+    }
   }
   
 }

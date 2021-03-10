@@ -47,14 +47,14 @@ export class PositionRotationComponent {
     ngOnChanges(changes){
         console.log(changes.values.currentValue);
         if (changes.values.currentValue != undefined && changes.values.currentValue != ""){
-            this.x = changes.values.currentValue.pos[0];
-            this.y = changes.values.currentValue.pos[1];
-            this.z = changes.values.currentValue.pos[2];
+            this.x = changes.values.currentValue.x;
+            this.y = changes.values.currentValue.y;
+            this.z = changes.values.currentValue.z;
     
-            this.rx = changes.values.currentValue.ang[0];
-            this.ry = changes.values.currentValue.ang[1];
-            this.rz = changes.values.currentValue.ang[2];
-            this.a = changes.values.currentValue.ang[3];
+            this.rx = changes.values.currentValue.rx;
+            this.ry = changes.values.currentValue.ry;
+            this.rz = changes.values.currentValue.rz;
+            this.a = changes.values.currentValue.a;
             this.angleAxisToEuler()
         }
     }

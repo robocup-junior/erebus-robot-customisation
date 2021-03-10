@@ -16,7 +16,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
-
+import { HttpClientModule  } from '@angular/common/http';
 
 
 
@@ -39,7 +39,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatButtonModule,
     MatExpansionModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    HttpClientModule 
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent]

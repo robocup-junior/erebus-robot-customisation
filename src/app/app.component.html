@@ -19,17 +19,18 @@
         <div id="file">
           <label>File Name: </label>
           <input #fileNameInput class="input" value="{{fileName}}">
-          <button mat-raised-button color="primary" (click)="export()">Export</button>
-          <br>
-          <br>
+          <button mat-raised-button color="primary" (click)="export_to_json()">Export to Json</button>
+          <!-- <br>
+          <br> -->
           <!-- <label>Share Code: </label> -->
           <!-- <input #shareCodeOutput class="input" value="{{shareCode}}"> -->
-          <button mat-raised-button color="primary" (click)="shareCodeToClip()">Copy Share Code to Clipboard</button>
+          <!-- <button mat-raised-button color="primary" (click)="shareCodeToClip()">Copy Share Code to Clipboard</button> -->
           <br>
           <br>
-          <label>Share Code Input: </label>
-          <input #shareCodeInput class="input" value="">
-          <button mat-raised-button color="primary" (click)="import(shareCodeInput)">Import</button>
+          <!-- <label>Import via json: </label> -->
+          <!-- <input #shareCodeInput class="input" value=""> -->
+          <button mat-raised-button color="primary" (click)="jsonInput.click()">Import from Json</button>
+          <input hidden (change)="jsonSelected($event)" #jsonInput type="file" id="file">
         </div>
         <br>
       </td>
