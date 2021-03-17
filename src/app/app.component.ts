@@ -25,7 +25,7 @@ export class AppComponent implements AfterViewInit {
   components = components;
 
   distCost = 50;
-  wheelCost = 200;
+  wheelCost = 300;
 
   previousWheelNumber = 2;
   numberOfWheels = 2;
