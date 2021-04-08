@@ -43,7 +43,7 @@ export class SliderComponent {
     }
     
     updatePosition($event){
-        this.customName = this.values.customName;
+        //this.customName = this.values.customName;
         this.x = $event.x;
         this.y = $event.y;
         this.z = $event.z;
