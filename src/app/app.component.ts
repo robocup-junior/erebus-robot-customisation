@@ -195,8 +195,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   destoryDevice(device) {
+    console.log(device.dictName)
     var body = this;
-    document.getElementById(this.selectedDevices[device.dictName].customName).remove();
+    document.getElementById(device.dictName).remove();
     body.scene.remove(this.deviceModels[device.dictName]);
     delete this.selectedDevices[device.dictName];
     delete this.deviceModels[device.dictName];
@@ -230,7 +231,7 @@ export class AppComponent implements AfterViewInit {
     if (model != null){
       if(this.deviceModels[dictName] == undefined){
         const labelDiv = document.createElement('div');
-        labelDiv.id = this.selectedDevices[dictName].customName;
+        labelDiv.id = this.selectedDevices[dictName].dictName;
         labelDiv.textContent = this.selectedDevices[dictName].customName;
         labelDiv.style.marginTop = '-1em';
         labelDiv.style.color = 'rgb(255, 255, 255)';
@@ -1350,7 +1351,7 @@ export class AppComponent implements AfterViewInit {
         }
       }
     }
-
+    console.log(json)
     this.selectedDevices = json;
 
     this.previousWheelNumber = this.numberOfWheels;

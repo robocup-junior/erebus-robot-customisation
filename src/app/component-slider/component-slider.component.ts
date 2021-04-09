@@ -36,6 +36,12 @@ export class SliderComponent {
         console.log(this.maxNumber)
         this.emitComponent();
     }
+
+    ngOnChanges(changes){
+        if (changes.values.currentValue != undefined && changes.values.currentValue != ""){
+            this.customName = changes.values.currentValue.customName;
+        }
+    }
     
     updateName($event){
         this.customName = $event.target.value;
