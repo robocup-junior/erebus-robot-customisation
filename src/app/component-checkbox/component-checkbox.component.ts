@@ -58,7 +58,6 @@ export class CheckBoxComponent {
 
     ngOnChanges(changes) {
         
-        console.log(this.customName, changes, this.import)
         if ("values" in changes){
             if (changes.values.currentValue != ""){
                 if (changes.values.currentValue != undefined){
@@ -66,6 +65,9 @@ export class CheckBoxComponent {
                 } 
             }else {
                 this.disable()
+            }
+            if (changes.values.currentValue != undefined && changes.values.currentValue != ""){
+                this.customName = changes.values.currentValue.customName;
             }
         } else {
             if ("import" in changes && this.checked){
@@ -75,6 +77,7 @@ export class CheckBoxComponent {
         if ("totalCost" in changes){
             this.disableCheckBox(changes.totalCost.currentValue);
         }
+        
     }
 
     disableCheckBox(totalCost){
