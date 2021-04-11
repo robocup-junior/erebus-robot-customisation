@@ -13,12 +13,12 @@ They can also be given custom names so they can be easily accessed in your code.
 
 - GPS
 - Gyro
-- Heat Sensor (x2)
-- Camera (x2)
+- Camera (x3)
 - Colour Sensor
 - Accelerometer
 - Lidar Sensor
 - Distance Sensors (up to 8)
+- Wheels (up to 4) with rotation sensor
 
 
 ## TODO
