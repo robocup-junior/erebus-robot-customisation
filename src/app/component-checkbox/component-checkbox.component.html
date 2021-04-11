@@ -17,4 +17,10 @@
     </mat-expansion-panel-header>
     <app-position-rot [values]=values (pos_rot)="updatePosition($event)"></app-position-rot>
     <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
+    <hr>
+    <div style="text-align: center;">
+      <p style="font-size:10px;margin-bottom: 0;">When using this sensor from your controller, the following tag name must be specified in your code.</p>
+      <p><b>{{customName}}</b></p>
+    </div>
+    
 </mat-expansion-panel>

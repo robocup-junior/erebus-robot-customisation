@@ -12,4 +12,14 @@
     </mat-expansion-panel-header>
     <app-position-rot [values]=values  minPositionX="{{-maxNumber}}" maxPositionX="{{maxNumber}}" minPositionZ="{{-maxNumber}}" maxPositionZ="{{maxNumber}}" (pos_rot)="updatePosition($event)"></app-position-rot>
     <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
+    <hr>
+    <div style="text-align: center;" *ngIf="name!='Wheel'">
+      <p style="font-size:10px;margin-bottom: 0;">When using this sensor from your controller, the following tag name must be specified in your code.</p>
+      <p><b>{{customName}}</b></p>
+    </div>
+    <div style="text-align: center;" *ngIf="name=='Wheel'">
+      <p style="font-size:10px;margin-bottom: 0;">When using this component from your controller, the following tag name must be specified in your code.</p>
+      <p style="margin-bottom: 0;"><font size=1>Motor:&nbsp;&nbsp;</font> <b>{{customName}} motor</b></p>
+      <p><font size=1>Rotation sensor:&nbsp;&nbsp;</font><b>{{customName}} sensor</b></p>
+    </div>
 </mat-expansion-panel>
