@@ -20,7 +20,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  budget = 2500;
+  budget = 3000;
   title = 'robot-customisation';
   components = components;
 

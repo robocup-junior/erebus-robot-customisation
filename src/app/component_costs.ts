@@ -3,25 +3,13 @@ export const components = [
         name: "Gyro",
         dictName: "gyro",
         defaultName: "gyro",
-        cost: 200
+        cost: 100
     },
     {
         name: "GPS",
         dictName: "gps",
         defaultName: "gps",
-        cost: 200
-    },
-    {
-        name: "Heat sensor",
-        dictName: "light1",
-        defaultName: "heat_sensor1",
-        cost: 200
-    },
-    {
-        name: "Heat sensor",
-        dictName: "light2",
-        defaultName: "heat_sensor2",
-        cost: 200
+        cost: 250
     },
     {
         name: "Camera",
@@ -36,22 +24,28 @@ export const components = [
         cost: 500
     },
     {
+        name: "Camera",
+        dictName: "camera3",
+        defaultName: "camera3",
+        cost: 500
+    },
+    {
         name: "Colour sensor",
         dictName: "colsensor",
         defaultName: "colour_sensor",
-        cost: 200
+        cost: 100
     },
     {
         name: "Accelerometer",
         dictName: "acc",
         defaultName: "accelerometer",
-        cost: 200
+        cost: 100
     },
     {
         name: "Lidar",
         dictName: "lidar",
         defaultName: "lidar",
-        cost: 200
+        cost: 500
     }
 
 ]
