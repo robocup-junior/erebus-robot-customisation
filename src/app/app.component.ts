@@ -208,13 +208,14 @@ export class AppComponent implements AfterViewInit {
     let model = null;
     if(this.selectedDevices[dictName].name == "Wheel"){
       const wheel_geometry = new THREE.CylinderGeometry(0.205,0.205,0.05, 100);
-      const texture = new THREE.TextureLoader().load("./../assets/textures/wheel.png");
+      const textureW1 = new THREE.TextureLoader().load("./../assets/textures/wheel1.png");
+      const textureW2 = new THREE.TextureLoader().load("./../assets/textures/wheel2.png");
 
-      const wheel_material_side = new THREE.MeshPhongMaterial( { map: texture} );
-      const wheel_material_top = new THREE.MeshPhongMaterial( { color: 0xffffff, opacity: 0.5, transparent: true} );
-      const wheel_material_bot = new THREE.MeshPhongMaterial( { color: 0xffffff, opacity: 0.5, transparent: true} );
+      const wheel_material_side1 = new THREE.MeshPhongMaterial( { map: textureW1} );
+      const wheel_material_side2 = new THREE.MeshPhongMaterial( { map: textureW2} );
+      const wheel_material_bot = new THREE.MeshPhongMaterial( { color: 0xfffffff, opacity: 0.5, transparent: true} );
         
-      const materials = [wheel_material_bot,wheel_material_side,wheel_material_top]
+      const materials = [wheel_material_bot,wheel_material_side1,wheel_material_side2]
       model = new THREE.Mesh( wheel_geometry, materials );
     }
     else{
