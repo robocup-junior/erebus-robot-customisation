@@ -12,6 +12,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {LZString} from './LZW';
 
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2'
 
 
 @Component({
@@ -1237,8 +1238,20 @@ export class AppComponent implements AfterViewInit {
   }
 
   export_to_json(){
-    console.log(JSON.stringify(this.selectedDevices))
-    this.download(this.fileNameField.nativeElement.value+".json",JSON.stringify(this.selectedDevices));
+    //customName check
+    for(let k of Object.keys(this.selectedDevices)){
+      let device = this.selectedDevices[k]
+      let cn = this.selectedDevices[k]["customName"]
+      if(!cn || cn==""){
+        Swal.fire(
+          'Name error',
+          `The name of the "${device["dictName"]}" has not been set properly.`,
+          'error'
+        )
+        return;
+      }
+    }
+    this.download(this.fileNameField.nativeElement.value+".json",JSON.stringify(this.selectedDevices, null , "\t"));
   }
   
   import(inputElement){

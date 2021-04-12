@@ -19,7 +19,7 @@
     </div>
     <div style="text-align: center;" *ngIf="name=='Wheel'">
       <p style="font-size:10px;margin-bottom: 0;">When using this component from your controller, the following tag name must be specified in your code.</p>
-      <p style="margin-bottom: 0;"><font size=1>Motor:&nbsp;&nbsp;</font> <b>{{customName}} motor</b></p>
-      <p><font size=1>Rotation sensor:&nbsp;&nbsp;</font><b>{{customName}} sensor</b></p>
+      <p style="margin-bottom: 0;" *ngIf="customName!=''"><font size=1>Motor:&nbsp;&nbsp;</font> <b>{{customName}} motor</b></p>
+      <p *ngIf="customName!=''"><font size=1>Rotation sensor:&nbsp;&nbsp;</font><b>{{customName}} sensor</b></p>
     </div>
 </mat-expansion-panel>
