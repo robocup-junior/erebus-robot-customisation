@@ -1238,6 +1238,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   export_to_json(){
+    let customNames = []
     //customName check
     for(let k of Object.keys(this.selectedDevices)){
       let device = this.selectedDevices[k]
@@ -1249,6 +1250,17 @@ export class AppComponent implements AfterViewInit {
           'error'
         )
         return;
+      }else{
+        if (customNames.indexOf(cn) >= 0){
+          Swal.fire(
+            'Name error',
+            `"${cn}" has already been specified by another sensor/motor. A non-duplicate name must be specified.`,
+            'error'
+          )
+          return;
+        }else{
+          customNames.push(cn)
+        }
       }
     }
     this.download(this.fileNameField.nativeElement.value+".json",JSON.stringify(this.selectedDevices, null , "\t"));
