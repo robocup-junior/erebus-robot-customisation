@@ -93,7 +93,7 @@ export class AppComponent implements AfterViewInit {
 
       body.scene.add(light);
 
-      const geometry = new THREE.CylinderGeometry(0.37,0.37,0.4,100);
+      const geometry = new THREE.CylinderGeometry(0.37,0.37,0.45,100);
       const texture = new THREE.TextureLoader().load("./../assets/textures/top.png");
       texture.rotation = 0;
       const top_material = new THREE.MeshPhongMaterial( { map: texture } );
@@ -101,7 +101,7 @@ export class AppComponent implements AfterViewInit {
       const bot_material = new THREE.MeshPhongMaterial( { color: 0xffffff } );
       const materials = [side_material,top_material,bot_material]
       body.robotModel = new THREE.Mesh( geometry, materials );
-      body.robotModel.position.set(0,0.1,0);
+      body.robotModel.position.set(0,0.05,0);
       body.scene.add( body.robotModel );
 
       body.renderer = new THREE.WebGLRenderer();
