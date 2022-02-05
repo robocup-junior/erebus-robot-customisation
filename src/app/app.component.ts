@@ -222,11 +222,11 @@ export class AppComponent implements AfterViewInit {
     else{
       const geometry = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
       const texture = new THREE.TextureLoader().load("./../assets/textures/sensor.png");
-      
+      // texture.center.set(0.5,0.5);
+      // texture.rotation = -1.57;
       const material_top = new THREE.MeshPhongMaterial( {map: texture} );
-      const material_bot = new THREE.MeshPhongMaterial( { color: 0xffffff} );
       const material_side = new THREE.MeshPhongMaterial( { color: 0xffffff} );
-      const materials = [material_side,material_bot,material_top,material_side,material_side,material_side]
+      const materials = [material_side,material_side,material_side,material_side,material_top,material_side]
 
       model = new THREE.Mesh( geometry, materials );
     }
@@ -251,12 +251,16 @@ export class AppComponent implements AfterViewInit {
       }
 
       var eulerRot = new THREE.Euler(0,0,0);
-      var rotationVector = new THREE.Vector3(this.selectedDevices[dictName].rx,this.selectedDevices[dictName].ry,this.selectedDevices[dictName].rz);
+      var rotationVector = new THREE.Vector3(this.selectedDevices[dictName].rx,this.selectedDevices[dictName].rz,this.selectedDevices[dictName].ry);
 
-      this.deviceModels[dictName].rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
+      this.deviceModels[dictName].rotation.set(eulerRot.x, eulerRot.z, eulerRot.y);
 
       this.deviceModels[dictName].rotateOnAxis(rotationVector.normalize(), this.selectedDevices[dictName].a);
       //console.log(this.deviceModels[dictName].rotation)
+      // if(this.selectedDevices[dictName].name != "Wheel"){
+      //     this.deviceModels[dictName].rotation.set(this.deviceModels[dictName].rotation.x, this.deviceModels[dictName].rotation.y+1.57, this.deviceModels[dictName].rotation.z);
+      // }
+
 
       this.deviceModels[dictName].position.set(this.selectedDevices[dictName].x / 1000, this.selectedDevices[dictName].y / 1000, this.selectedDevices[dictName].z / 1000);
 
@@ -1237,12 +1241,14 @@ export class AppComponent implements AfterViewInit {
     this.createSnackBar('Copied to clipboard!');
   }
 
+
   export_to_json(){
-    let customNames = []
+    let customNames = [];
+    let exportFLU_selectedDevices = JSON.parse(JSON.stringify(this.selectedDevices));
     //customName check
-    for(let k of Object.keys(this.selectedDevices)){
-      let device = this.selectedDevices[k]
-      let cn = this.selectedDevices[k]["customName"]
+    for(let k of Object.keys(exportFLU_selectedDevices)){
+      let device = exportFLU_selectedDevices[k]
+      let cn = exportFLU_selectedDevices[k]["customName"]
       if(!cn || cn==""){
         Swal.fire(
           'Name error',
@@ -1262,8 +1268,17 @@ export class AppComponent implements AfterViewInit {
           customNames.push(cn)
         }
       }
+      // let rots = this.angleAxisToEuler(exportFLU_selectedDevices[k]["rx"],exportFLU_selectedDevices[k]["ry"],exportFLU_selectedDevices[k]["rz"],exportFLU_selectedDevices[k]["a"]);
+      // rots[0] -= Math.PI / 2;
+      // let erots = this.eulerToAngleAxis(rots[0], rots[1], rots[2]);
+      // exportFLU_selectedDevices[k]["rx"] = erots[0];
+      // exportFLU_selectedDevices[k]["ry"] = erots[1];
+      // exportFLU_selectedDevices[k]["rz"] = erots[2];
+      // exportFLU_selectedDevices[k]["a"] = erots[3];
     }
-    this.download(this.fileNameField.nativeElement.value+".json",JSON.stringify(this.selectedDevices, null , "\t"));
+    console.log(exportFLU_selectedDevices);
+    console.log(this.selectedDevices);
+    this.download(this.fileNameField.nativeElement.value+".json",JSON.stringify(exportFLU_selectedDevices, null , "\t"));
   }
   
   import(inputElement){
@@ -1344,6 +1359,13 @@ export class AppComponent implements AfterViewInit {
   }
 
   importFromJson(json){
+    console.log("import from json");
+    
+    this.cost = 0;
+
+    for (let component in this.selectedDevices){
+      this.destoryDevice(this.selectedDevices[component]);
+    }
     
     this.distanceSensorValues = []
     this.wheelSensorValues = []
@@ -1359,23 +1381,34 @@ export class AppComponent implements AfterViewInit {
     
     // Create new selectedDevices
     for(let component in json){
-      let value = json[component]
+      // let rots = this.angleAxisToEuler(json[component].rx,json[component].ry,json[component].rz,json[component].a);
+      // rots[0] += Math.PI/2;
+      // let erots = this.eulerToAngleAxis(rots[2], rots[0], rots[1]);
+      // let erots = this.eulerToAngleAxis(rots[0], rots[1], rots[2]);
+      // json[component].rx = erots[0];
+      // json[component].ry = erots[1];
+      // json[component].rz = erots[2];
+      // json[component].a = erots[3];
+
       if (json[component].name == "Distance Sensor"){
-        this.distanceSensorValues.push(value)
+        this.distanceSensorValues.push(json[component])
+        this.cost += this.distCost;
       }
       else if (json[component].name == "Wheel"){
-        this.wheelSensorValues.push(value)
-      } else {
-        for (let c in components){
-          if (components[c].dictName == component){
-            this.checkboxValues[component] = value
-            if (this.selectedDevices[component] == undefined)
-            {
-              this.cost += components[c].cost
-            }
-          }
+        this.wheelSensorValues.push(json[component])
+        this.cost += this.wheelCost;
+      } 
+      console.log(component)
+
+      for (let c in components){
+        if (components[c].dictName == component){
+          console.log(components[c].dictName,components[c])
+
+          this.checkboxValues[component] = json[component]
+          this.cost += components[c].cost
         }
       }
+      
     }
     console.log(json)
     this.selectedDevices = json;

@@ -17,10 +17,10 @@ export class PositionRotationComponent {
     y: number = 0;
     z: number = 0;
 
-    rx: number = 0;
-    ry: number = 0;
-    rz: number = 0;
-    a: number = 0;
+    rx: number = -0.5858;
+    ry: number = 0.5858;
+    rz: number = 0.5858;
+    a: number = 2.09;
 
     ex: number = 0;
     ey: number = 0;
@@ -43,6 +43,11 @@ export class PositionRotationComponent {
     @Input() maxAngleAxis: number = 1;
 
     @Input() angleStep: number = 0.01;
+
+    ngOnInit(){
+        this.angleAxisToEuler();
+        this.emitInfo();
+    }
 
     ngOnChanges(changes){
         if (changes.values.currentValue != undefined && changes.values.currentValue != ""){
