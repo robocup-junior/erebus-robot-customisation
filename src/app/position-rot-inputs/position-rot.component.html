@@ -10,15 +10,27 @@
 <label>Angle-Axis Rotation: </label>
 <div id="rotationAngleAxisContainer">
     <div>X: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{rx}}" (change)="axisAngleChange($event, 'x')" (keyup)="axisAngleChange($event, 'x')" ></div>
-    <div>Y: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{ry}}" (change)="axisAngleChange($event, 'y')" (keyup)="axisAngleChange($event, 'y')"></div>
-    <div>Z: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{rz}}" (change)="axisAngleChange($event, 'z')" (keyup)="axisAngleChange($event, 'z')"></div>
+    <div class="wheel_if" *ngIf="wheel;else other_device_aa">
+        <div>Z: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{ry}}" (change)="axisAngleChange($event, 'y')" (keyup)="axisAngleChange($event, 'y')"></div>
+        <div>Y: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{rz}}" (change)="axisAngleChange($event, 'z')" (keyup)="axisAngleChange($event, 'z')"></div>
+    </div>
+    <ng-template #other_device_aa>
+        <div>Z: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{rz}}" (change)="axisAngleChange($event, 'z')" (keyup)="axisAngleChange($event, 'z')"></div>
+        <div>Y: <input type="number" max="{{maxAngleAxis}}" min="{{minAngleAxis}}" step="{{angleStep}}" value="{{ry}}" (change)="axisAngleChange($event, 'y')" (keyup)="axisAngleChange($event, 'y')"></div>
+    </ng-template>
     <div>Angle: <input type="number" step="{{angleStep}}" value="{{a}}" (change)="axisAngleChange($event, 'a')" (keyup)="axisAngleChange($event, 'a')"></div>
 </div>
 <br>
 <label>Euler Rotation: </label>
 <div id="rotationEulerContainer">
     <div>X: <input type="number" step="{{angleStep}}" value="{{ex}}" (change)="changeAngle($event, 'x')" (keyup)="changeAngle($event, 'x')" ></div>
-    <div>Y: <input type="number" step="{{angleStep}}" value="{{ey}}" (change)="changeAngle($event, 'y')" (keyup)="changeAngle($event, 'y')"></div>
-    <div>Z:<input type="number" step="{{angleStep}}" value="{{ez}}" (change)="changeAngle($event, 'z')" (keyup)="changeAngle($event, 'z')"></div>
+    <div class="wheel_if" *ngIf="wheel;else other_device_e">
+        <div>Z: <input type="number" step="{{angleStep}}" value="{{ey}}" (change)="changeAngle($event, 'y')" (keyup)="changeAngle($event, 'y')"></div>
+        <div>Y:<input type="number" step="{{angleStep}}" value="{{ez}}" (change)="changeAngle($event, 'z')" (keyup)="changeAngle($event, 'z')"></div>
+    </div>
+    <ng-template #other_device_e>
+        <div>Z: <input type="number" step="{{angleStep}}" value="{{ez}}" (change)="changeAngle($event, 'z')" (keyup)="changeAngle($event, 'z')"></div>
+        <div>Y:<input type="number" step="{{angleStep}}" value="{{ey}}" (change)="changeAngle($event, 'y')" (keyup)="changeAngle($event, 'y')"></div>
+    </ng-template>
 </div>
 <br>

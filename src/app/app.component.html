@@ -19,6 +19,10 @@
         <div id="threeCanvas">
           <div #three></div>
         </div>
+        <div id="axisHelpText">
+          Axis Help - <span id="x_axis">X: Blue</span>, <span id="y_axis">Y: Green</span>, <span id="z_axis">Z: Red</span>
+        </div>
+        <br>
         <div id="file">
           <label>File Name: </label>
           <input #fileNameInput class="input" value="{{fileName}}">
@@ -59,7 +63,7 @@
         <br>
         <br>
         <div *ngFor="let item of wheelsIterator; let i = index">
-          <app-component-slider [values]=wheelSensorValues[i] [zxmax]=260 [name]="'Wheel'" [number]="i + 1" (component)="addSelectedComponent($event)"></app-component-slider>
+          <app-component-slider [values]=wheelSensorValues[i] [zxmax]=260 [name]="'Wheel'" [number]="i + 1" [wheel]=true (component)="addSelectedComponent($event)"></app-component-slider>
         </div>
       </td>
       

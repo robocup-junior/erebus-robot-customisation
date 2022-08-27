@@ -12,6 +12,7 @@ export class SliderComponent {
     @Input() number: number;
     @Input() name: string;
     @Input() zxmax: number;
+    @Input() wheel: boolean;
 
     @Input() values;
     

@@ -10,6 +10,7 @@ import * as THREE from 'three';
 
 export class PositionRotationComponent {
     @Input() values;
+    @Input() wheel: boolean;
 
     @Output() pos_rot = new EventEmitter<any>();
 
@@ -124,8 +125,13 @@ export class PositionRotationComponent {
         object.rotateOnAxis(rotationVector.normalize(), this.a);
 
         this.ex = +object.rotation.x.toFixed(2);
-        this.ey = +object.rotation.y.toFixed(2);
-        this.ez = +object.rotation.z.toFixed(2);
+        if (this.wheel) {
+            this.ey = +object.rotation.y.toFixed(2);
+            this.ez = +object.rotation.z.toFixed(2);
+        } else {
+            this.ez = +object.rotation.y.toFixed(2);
+            this.ey = +object.rotation.z.toFixed(2);
+        }
     }
 
     eulerToAngleAxis(){        
