@@ -15,10 +15,8 @@
           </h2>
         </div>
         
+        <app-threejs-render [deviceUpdate]=this.renderDeviceUpdate></app-threejs-render>
 
-        <div id="threeCanvas">
-          <div #three></div>
-        </div>
         <div id="axisHelpText">
           Axis Help - <span id="x_axis">X: Blue</span>, <span id="y_axis">Y: Green</span>, <span id="z_axis">Z: Red</span>
         </div>
@@ -27,15 +25,8 @@
           <label>File Name: </label>
           <input #fileNameInput class="input" value="{{fileName}}">
           <button mat-raised-button color="primary" (click)="export_to_json()">Export to Json</button>
-          <!-- <br>
-          <br> -->
-          <!-- <label>Share Code: </label> -->
-          <!-- <input #shareCodeOutput class="input" value="{{shareCode}}"> -->
-          <!-- <button mat-raised-button color="primary" (click)="shareCodeToClip()">Copy Share Code to Clipboard</button> -->
           <br>
           <br>
-          <!-- <label>Import via json: </label> -->
-          <!-- <input #shareCodeInput class="input" value=""> -->
           <button mat-raised-button color="primary" (click)="jsonInput.click()">Import from Json</button>
           <input hidden (change)="jsonSelected($event)" #jsonInput type="file" id="file">
         </div>
@@ -44,7 +35,7 @@
       <td colspan="2">
         <h2>Sensors:</h2>
         <div *ngFor="let item of components">
-          <app-component-checkbox [import]=checkboxImport[item.dictName] [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addSelectedComponent($event)"></app-component-checkbox>
+          <app-component-checkbox [import]=checkboxImport[item.dictName] [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addRenderDevice($event)"></app-component-checkbox>
         </div>
         <br>
       </td>
@@ -54,7 +45,7 @@
         <br>
         <br>
         <div *ngFor="let dist of distsIterator; let j = index">
-          <app-component-slider [values]=distanceSensorValues[j] [zxmax]=370 [name]="'Distance Sensor'" [number]="j + 1" (component)="addSelectedComponent($event)"></app-component-slider>
+          <app-component-slider [values]=distanceSensorValues[j] [zxmax]=370 [name]="'Distance Sensor'" [number]="j + 1" (component)="addRenderDevice($event)"></app-component-slider>
         </div>
       </td>
       <td colspan="2">
@@ -63,7 +54,7 @@
         <br>
         <br>
         <div *ngFor="let item of wheelsIterator; let i = index">
-          <app-component-slider [values]=wheelSensorValues[i] [zxmax]=260 [name]="'Wheel'" [number]="i + 1" [wheel]=true (component)="addSelectedComponent($event)"></app-component-slider>
+          <app-component-slider [values]=wheelSensorValues[i] [zxmax]=260 [name]="'Wheel'" [number]="i + 1" [wheel]=true (component)="addRenderDevice($event)"></app-component-slider>
         </div>
       </td>
       
