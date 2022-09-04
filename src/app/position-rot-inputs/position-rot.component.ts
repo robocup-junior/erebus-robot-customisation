@@ -173,6 +173,7 @@ export class PositionRotationComponent {
     }
 
     changeAngle($event, slider: string): void {
+        console.log($event.target.value, slider)
         var newVal = parseFloat($event.target.value);
         if ($event.target.value != "") {
             if (slider == 'x') {
@@ -184,8 +185,8 @@ export class PositionRotationComponent {
             else if (slider == 'z') {
                 this.ez = newVal;
             }
-            this.emitInfo();
             this.eulerToAngleAxis()
+            this.emitInfo();
         }
     }
 
