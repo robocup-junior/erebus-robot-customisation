@@ -167,8 +167,13 @@ export class PositionRotationComponent {
         }
 
         this.rx = +x.toFixed(2);
-        this.ry = +y.toFixed(2);
-        this.rz = +z.toFixed(2);
+        if (this.wheel) {
+            this.ry = -y.toFixed(2);
+            this.rz = +z.toFixed(2);
+        } else {
+            this.rz = +y.toFixed(2);
+            this.ry = +z.toFixed(2);
+        }
         this.a = +angle.toFixed(2);
     }
 
