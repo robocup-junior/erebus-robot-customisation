@@ -49,13 +49,13 @@ export class PositionRotationComponent {
         this.angleAxisToEuler();
         this.emitInfo();
     }
-
+    
     ngOnChanges(changes): void {
         if (changes.values.currentValue != undefined && changes.values.currentValue != "") {
             this.x = changes.values.currentValue.x;
             this.y = changes.values.currentValue.y;
             this.z = changes.values.currentValue.z;
-
+            
             this.rx = changes.values.currentValue.rx;
             this.ry = changes.values.currentValue.ry;
             this.rz = changes.values.currentValue.rz;
@@ -168,7 +168,7 @@ export class PositionRotationComponent {
 
         this.rx = +x.toFixed(2);
         if (this.wheel) {
-            this.ry = -y.toFixed(2);
+            this.ry = +y.toFixed(2);
             this.rz = +z.toFixed(2);
         } else {
             this.rz = +y.toFixed(2);
