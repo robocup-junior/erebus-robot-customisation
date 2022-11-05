@@ -6,6 +6,12 @@ export const components = [
         cost: 100
     },
     {
+        name: "InertialUnit",
+        dictName: "iu",
+        defaultName: "inertial_unit",
+        cost: 100
+    },
+    {
         name: "GPS",
         dictName: "gps",
         defaultName: "gps",

@@ -17,6 +17,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import { HttpClientModule  } from '@angular/common/http';
+import { ThreejsRenderComponent } from './threejs-render/threejs-render.component';
 
 
 
@@ -26,7 +27,8 @@ import { HttpClientModule  } from '@angular/common/http';
     AppComponent,
     CheckBoxComponent,
     SliderComponent,
-    PositionRotationComponent
+    PositionRotationComponent,
+    ThreejsRenderComponent
   ],
   imports: [
     BrowserModule,

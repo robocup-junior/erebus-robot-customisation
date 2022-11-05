@@ -10,7 +10,7 @@
         <b>{{name}} {{number}}</b>
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-position-rot [values]=values  minPositionX="{{-maxNumber}}" maxPositionX="{{maxNumber}}" minPositionZ="{{-maxNumber}}" maxPositionZ="{{maxNumber}}" (pos_rot)="updatePosition($event)"></app-position-rot>
+    <app-position-rot wheel="{{wheel}}" [values]=values  minPositionX="{{-maxNumber}}" maxPositionX="{{maxNumber}}" minPositionZ="{{-maxNumber}}" maxPositionZ="{{maxNumber}}" (pos_rot)="updatePosition($event)"></app-position-rot>
     <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
     <hr>
     <div style="text-align: center;" *ngIf="name!='Wheel'">

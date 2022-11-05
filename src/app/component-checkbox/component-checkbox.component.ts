@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output,ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Subject } from 'rxjs';
 import { FaceColors, TubeBufferGeometry } from 'three';
 import { Device } from '../device';
 
 @Component({
-  selector: 'app-component-checkbox',
-  templateUrl: './component-checkbox.component.html',
-  styleUrls: ['./component-checkbox.component.css']
+    selector: 'app-component-checkbox',
+    templateUrl: './component-checkbox.component.html',
+    styleUrls: ['./component-checkbox.component.css']
 })
 
 export class CheckBoxComponent {
@@ -45,53 +45,51 @@ export class CheckBoxComponent {
     min: number = -370;
     max: number = 370;
 
-    disable(){
+    disable(): void {
         this.checked = false;
-        if (this.expPanel != undefined){
+        if (this.expPanel != undefined) {
             this.expPanel.close();
         }
     }
 
-    withinBudget(totalCost){
+    withinBudget(totalCost: number): boolean {
         return totalCost + this.cost <= this.budget
     }
 
-    ngOnChanges(changes) {
-        
-        if ("values" in changes){
-            if (changes.values.currentValue != ""){
-                if (changes.values.currentValue != undefined){
+    ngOnChanges(changes): void {
+        if ("values" in changes) {
+            if (changes.values.currentValue != "") {
+                if (changes.values.currentValue != undefined) {
                     this.checked = true;
-                } 
-            }else {
+                }
+            } else {
                 this.disable()
             }
-            if (changes.values.currentValue != undefined && changes.values.currentValue != ""){
+            if (changes.values.currentValue != undefined && changes.values.currentValue != "") {
                 this.customName = changes.values.currentValue.customName;
             }
         } else {
-            if ("import" in changes && this.checked){
+            if ("import" in changes && this.checked) {
                 this.disable()
             }
         }
-        if ("totalCost" in changes){
+        if ("totalCost" in changes) {
             this.disableCheckBox(changes.totalCost.currentValue);
         }
-        
+
     }
 
-    disableCheckBox(totalCost){
-        if(!this.withinBudget(totalCost) && !this.checked){
+    disableCheckBox(totalCost: number): void {
+        if (!this.withinBudget(totalCost) && !this.checked) {
             this.disabled = true;
         } else {
             this.disabled = false;
         }
     }
 
-    click($event): void{
-        console.log(this.check)
-        if ($event.checked){
-            if (!this.withinBudget(this.totalCost)){
+    click($event): void {
+        if ($event.checked) {
+            if (!this.withinBudget(this.totalCost)) {
                 this.checked = false
                 // $event.checked = false;
             } else {
@@ -106,11 +104,10 @@ export class CheckBoxComponent {
             this.outputCost.emit(-this.cost);
             this.emitComponent("sub");
         }
-        
+
     }
 
-    updatePosition($event){
-        //this.customName = this.values.customName
+    updatePosition($event): void {
         this.x = $event.x;
         this.y = $event.y;
         this.z = $event.z;
@@ -121,12 +118,12 @@ export class CheckBoxComponent {
         this.emitComponent("add")
     }
 
-    updateName($event){
+    updateName($event): void {
         this.customName = $event.target.value;
         this.emitComponent("add");
     }
 
-    emitComponent(type: string){
+    emitComponent(type: string): void {
         let device = new Device(this.dictName, this.name, this.customName, type, this.x, this.y, this.z, this.rx, this.ry, this.rz, this.a);
         this.component.emit(device);
     }

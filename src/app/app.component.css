@@ -1,3 +1,7 @@
+#help_text {
+    padding: 0px 10px 10px 10px;
+}
+
 table{
     width: 100%;
     table-layout: fixed;
@@ -49,4 +53,18 @@ h1 {
 
 .input:focus {
     border: 1px solid rgb(42, 130, 230);
+}
+
+#axisHelpText {
+    font-weight: bold;
+}
+
+#x_axis {
+    color: red
+}
+#y_axis {
+    color: rgb(82, 209, 78)
+}
+#z_axis {
+    color: blue;
 }
