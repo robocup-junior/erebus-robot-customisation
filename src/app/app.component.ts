@@ -79,7 +79,7 @@ export class AppComponent implements AfterViewInit {
 
   destroyRenderDevice(device: Device): Promise<unknown> {
     device.type = 'sub';
-    this.renderDeviceUpdate = device;
+    this.renderDeviceUpdate = {...device};
     delete this.selectedDevices[device.dictName];
     return new Promise(resolve => { setTimeout(() => resolve('destroyed')), 10000 });
   }
@@ -89,10 +89,13 @@ export class AppComponent implements AfterViewInit {
     if (this.withinBudget((parseInt($event.value) * this.wheelCost) - (this.previousWheelNumber * this.wheelCost))) {
       this.numberOfWheels = parseInt($event.value);
       this.wheelsIterator = Array(this.numberOfWheels).fill(0);
-      if (this.previousWheelNumber - this.numberOfWheels > 0) {
-        //decreased slider
-        this.selectedDevices["Wheel " + this.previousWheelNumber].type = "sub";
-        this.addRenderDevice(this.selectedDevices["Wheel " + this.previousWheelNumber]);
+      if (this.previousWheelNumber - this.numberOfWheels > 0) {        
+        let numWheelToRmv = this.previousWheelNumber - this.numberOfWheels;
+        for (let i = this.previousWheelNumber; i > this.previousWheelNumber - numWheelToRmv; i --) {
+          //decreased slider
+          this.selectedDevices["Wheel " + i].type = "sub";
+          this.destroyRenderDevice(this.selectedDevices["Wheel " + i]);
+        }
       }
       this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
     } else {
@@ -107,9 +110,12 @@ export class AppComponent implements AfterViewInit {
       this.numberOfDists = parseInt($event.value);
       this.distsIterator = Array(this.numberOfDists).fill(0);
       if (this.previousDistNumber - this.numberOfDists > 0) {
-        //decreased slider
-        this.selectedDevices["Distance Sensor " + this.previousDistNumber].type = "sub";
-        this.addRenderDevice(this.selectedDevices["Distance Sensor " + this.previousDistNumber]);
+        let numDistsToRmv = this.previousDistNumber - this.numberOfDists;
+        for (let i = this.previousDistNumber; i > this.previousDistNumber - numDistsToRmv; i --) {
+          //decreased slider
+          this.selectedDevices["Distance Sensor " + i].type = "sub";
+          this.destroyRenderDevice(this.selectedDevices["Distance Sensor " + i]);
+        }
       }
       this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
     } else {
