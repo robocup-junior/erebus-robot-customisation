@@ -1,3 +1,18 @@
+#help_text {
+    background-color: #ffb631;
+    padding: 10px 10px 10px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.warning_symbol {
+    font-size: 50px;
+    padding: 10px 10px 10px 0px;
+}
+
+
+
 table{
     width: 100%;
     table-layout: fixed;
