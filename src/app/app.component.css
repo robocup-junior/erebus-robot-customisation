@@ -2,8 +2,6 @@
     background-color: #ffb631;
     padding: 10px 10px 10px 10px;
     width: 100%;
-    position: absolute;
-    bottom: 0;
     box-sizing: border-box;
     display: flex;
 }
