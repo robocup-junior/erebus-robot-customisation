@@ -10,12 +10,14 @@
     font-size: 50px;
     padding: 10px 10px 10px 0px;
 }
-
-
-
+body {
+    display: flex;
+    flex-direction: column;
+}
 table{
     width: 100%;
     table-layout: fixed;
+    flex: 1;
 }
 td {
     padding-left: 10px;
