@@ -160,19 +160,6 @@ export class AppComponent implements AfterViewInit {
     return this.cost + (value) <= this.budget
   }
 
-  addRenderDevice(device: Device): Promise<unknown> {
-    this.selectedDevices[device.dictName] = device;
-    this.renderDeviceUpdate = device;
-    return new Promise(resolve => { setTimeout(() => resolve('added')), 10000 });
-  }
-
-  destroyRenderDevice(device: Device): Promise<unknown> {
-    device.type = 'sub';
-    this.renderDeviceUpdate = {...device};
-    delete this.selectedDevices[device.dictName];
-    return new Promise(resolve => { setTimeout(() => resolve('destroyed')), 10000 });
-  }
-
   onWheelSliderChange($event): void {
     this.previousWheelNumber = this.numberOfWheels;
     if (this.withinBudget((parseInt($event.value) * this.wheelCost) - (this.previousWheelNumber * this.wheelCost))) {
@@ -183,7 +170,7 @@ export class AppComponent implements AfterViewInit {
         for (let i = this.previousWheelNumber; i > this.previousWheelNumber - numWheelToRmv; i --) {
           //decreased slider
           this.selectedDevices["Wheel " + i].type = "sub";
-          this.destroyRenderDevice(this.selectedDevices["Wheel " + i]);
+          this.destoryDevice(this.selectedDevices["Wheel " + i]);
         }
       }
       this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
@@ -204,7 +191,7 @@ export class AppComponent implements AfterViewInit {
         for (let i = this.previousDistNumber; i > this.previousDistNumber - numDistsToRmv; i --) {
           //decreased slider
           this.selectedDevices["Distance Sensor " + i].type = "sub";
-          this.destroyRenderDevice(this.selectedDevices["Distance Sensor " + i]);
+          this.destoryDevice(this.selectedDevices["Distance Sensor " + i]);
         }
       }
       this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
@@ -1363,6 +1350,11 @@ export class AppComponent implements AfterViewInit {
   }
 
   importFromJson(json){
+    console.log("IMPORTING...");
+    this.cost = 0;
+    for (let component in this.selectedDevices) {
+      this.destoryDevice(this.selectedDevices[component]);
+    }
     
     this.distanceSensorValues = []
     this.wheelSensorValues = []
@@ -1396,6 +1388,7 @@ export class AppComponent implements AfterViewInit {
         }
       }
     }
+
     console.log(json)
     this.selectedDevices = json;
 
