@@ -1350,7 +1350,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   importFromJson(json){
-    console.log("IMPORTING...");
     this.cost = 0;
     for (let component in this.selectedDevices) {
       this.destoryDevice(this.selectedDevices[component]);
