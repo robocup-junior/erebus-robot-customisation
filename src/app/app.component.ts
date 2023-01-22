@@ -63,6 +63,7 @@ export class AppComponent implements AfterViewInit {
   checkboxValues = {}
   checkboxImport = {}
   
+  renderDeviceUpdate: Device;
 
   constructor(private snackBar: MatSnackBar, private http: HttpClient) {
   }
@@ -159,16 +160,18 @@ export class AppComponent implements AfterViewInit {
     return this.cost + (value) <= this.budget
   }
 
-  onWheelSliderChange($event) {
-    if (this.withinBudget((parseInt($event.value) * this.wheelCost) - (this.previousWheelNumber * this.wheelCost))){
-      this.previousWheelNumber = this.numberOfWheels;
+  onWheelSliderChange($event): void {
+    this.previousWheelNumber = this.numberOfWheels;
+    if (this.withinBudget((parseInt($event.value) * this.wheelCost) - (this.previousWheelNumber * this.wheelCost))) {
       this.numberOfWheels = parseInt($event.value);
       this.wheelsIterator = Array(this.numberOfWheels).fill(0);
-      if (this.previousWheelNumber - this.numberOfWheels > 0){
-        //decreased slider
-        //console.log("Wheel " + this.previousWheelNumber)
-        this.selectedDevices["Wheel " + this.previousWheelNumber].type = "sub";
-        this.addSelectedComponent(this.selectedDevices[ "Wheel " + this.previousWheelNumber]);
+      if (this.previousWheelNumber - this.numberOfWheels > 0) {        
+        let numWheelToRmv = this.previousWheelNumber - this.numberOfWheels;
+        for (let i = this.previousWheelNumber; i > this.previousWheelNumber - numWheelToRmv; i --) {
+          //decreased slider
+          this.selectedDevices["Wheel " + i].type = "sub";
+          this.destoryDevice(this.selectedDevices["Wheel " + i]);
+        }
       }
       this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
     } else {
@@ -183,10 +186,13 @@ export class AppComponent implements AfterViewInit {
       this.previousDistNumber = this.numberOfDists;
       this.numberOfDists = parseInt($event.value);
       this.distsIterator = Array(this.numberOfDists).fill(0);
-      if (this.previousDistNumber - this.numberOfDists > 0){
-        //decreased slider
-        this.selectedDevices["Distance Sensor " + this.previousDistNumber].type = "sub";
-        this.addSelectedComponent(this.selectedDevices["Distance Sensor " + this.previousDistNumber]);
+      if (this.previousDistNumber - this.numberOfDists > 0) {
+        let numDistsToRmv = this.previousDistNumber - this.numberOfDists;
+        for (let i = this.previousDistNumber; i > this.previousDistNumber - numDistsToRmv; i --) {
+          //decreased slider
+          this.selectedDevices["Distance Sensor " + i].type = "sub";
+          this.destoryDevice(this.selectedDevices["Distance Sensor " + i]);
+        }
       }
       this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
     } else {
@@ -1344,6 +1350,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   importFromJson(json){
+    this.cost = 0;
+    for (let component in this.selectedDevices) {
+      this.destoryDevice(this.selectedDevices[component]);
+    }
     
     this.distanceSensorValues = []
     this.wheelSensorValues = []
@@ -1377,6 +1387,7 @@ export class AppComponent implements AfterViewInit {
         }
       }
     }
+
     console.log(json)
     this.selectedDevices = json;
 
