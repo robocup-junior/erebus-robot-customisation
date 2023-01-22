@@ -32,7 +32,7 @@
           <!-- <label>Import via json: </label> -->
           <!-- <input #shareCodeInput class="input" value=""> -->
           <button mat-raised-button color="primary" (click)="jsonInput.click()">Import from Json</button>
-          <input hidden (change)="jsonSelected($event)" #jsonInput type="file" id="file">
+          <input hidden (change)="jsonSelected($event)" #jsonInput type="file" id="file" onclick="this.value = null">
         </div>
         <br>
       </td>
