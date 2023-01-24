@@ -9,7 +9,7 @@
           <h1 style="margin-bottom: 5px;">
             Erebus Robot Customisation 2021
           </h1>
-          <span>Ver. 21.2.5</span>
+          <span>Ver. 21.2.4</span>
           <h2 class="budget">
             Budget: {{budget}} &nbsp;&nbsp;Cost: {{cost}}
           </h2>
@@ -32,7 +32,7 @@
           <!-- <label>Import via json: </label> -->
           <!-- <input #shareCodeInput class="input" value=""> -->
           <button mat-raised-button color="primary" (click)="jsonInput.click()">Import from Json</button>
-          <input hidden (change)="jsonSelected($event)" #jsonInput type="file" id="file" onclick="this.value = null">
+          <input hidden (change)="jsonSelected($event)" #jsonInput type="file" id="file">
         </div>
         <br>
       </td>
