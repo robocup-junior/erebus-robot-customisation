@@ -72,6 +72,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   addRenderDevice(device: Device): Promise<unknown> {
+    if (device.type == 'sub') {
+      this.destroyRenderDevice(device);
+      return;
+    }
     this.selectedDevices[device.dictName] = device;
     this.renderDeviceUpdate = device;
     return new Promise(resolve => { setTimeout(() => resolve('added')), 10000 });
