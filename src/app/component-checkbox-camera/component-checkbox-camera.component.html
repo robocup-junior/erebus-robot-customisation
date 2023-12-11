@@ -1,0 +1,34 @@
+<!-- <mat-checkbox [checked]="checked" (change)="click($event)" [disabled]="disabled">{{name}} ({{cost}}) </mat-checkbox>
+<div *ngIf="checked == true">
+    <app-position-rot (pos_rot)="updatePosition($event)"></app-position-rot>
+    <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
+    <br>
+    <br>
+</div>
+<br *ngIf="checked == false">
+<br *ngIf="checked == false"> -->
+
+
+<mat-expansion-panel [disabled]="disabled || !checked">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-checkbox [checked]=checked (change)="click($event)" [disabled]="disabled">{{name}} ({{cost}}) </mat-checkbox>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-position-rot [values]=values (pos_rot)="updatePosition($event)"></app-position-rot>
+    <label>Width: </label>
+    <select (change)="widthChange($event.target.value)">
+      <option *ngFor="let x of dims" value="{{x}}" [selected]="x == 64">{{x}}</option>
+    </select><br>
+    <label>Height: </label>
+    <select (change)="heightChange($event.target.value)">
+      <option *ngFor="let x of dims" value="{{x}}" [selected]="x == 40">{{x}}</option>
+    </select><br><br>
+    <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
+    <hr>
+    <div style="text-align: center;">
+      <p style="font-size:10px;margin-bottom: 0;">When using this sensor from your controller, the following tag name must be specified in your code.</p>
+      <p><b>{{customName}}</b></p>
+    </div>
+    
+</mat-expansion-panel>
