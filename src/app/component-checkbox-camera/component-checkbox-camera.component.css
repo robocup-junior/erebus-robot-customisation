@@ -15,3 +15,7 @@ input{
 mat-expansion-panel{
     margin-bottom: 20px;
 }
+
+mat-panel-title {
+    padding-top: 15px;
+}

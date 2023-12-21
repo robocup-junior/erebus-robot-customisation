@@ -81,3 +81,16 @@ h1 {
 #z_axis {
     color: blue;
 }
+
+#overbudgetWarning {
+    color: red;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#overbudgetWarningSmall {
+    font-style: italic;
+    color: grey;
+    margin-bottom: 10px;
+}

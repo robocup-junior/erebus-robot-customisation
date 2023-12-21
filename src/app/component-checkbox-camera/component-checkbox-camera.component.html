@@ -16,13 +16,14 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-position-rot [values]=values (pos_rot)="updatePosition($event)"></app-position-rot>
+    <span style="font-size: 16px;">Resolution:</span><br>
     <label>Width: </label>
-    <select (change)="widthChange($event.target.value)">
-      <option *ngFor="let x of dims" value="{{x}}" [selected]="x == 64">{{x}}</option>
+    <select [(ngModel)]="width" (ngModelChange)="widthChange($event)">
+      <option *ngFor="let x of dimMap" [ngValue]="x">{{x[0]}} ({{x[1]}})</option>
     </select><br>
     <label>Height: </label>
-    <select (change)="heightChange($event.target.value)">
-      <option *ngFor="let x of dims" value="{{x}}" [selected]="x == 40">{{x}}</option>
+    <select [(ngModel)]="height" (ngModelChange)="heightChange($event)">
+      <option *ngFor="let x of dimMap" [ngValue]="x">{{x[0]}} ({{x[1]}})</option>
     </select><br><br>
     <label>Name: </label><input value="{{customName}}" (keyup)="updateName($event)">
     <hr>
