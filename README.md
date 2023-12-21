@@ -1,6 +1,6 @@
 # Robot Customisation
 
-Robot customiser and generator for RoboCupJunior 2021
+Robot customiser and generator for RoboCupJunior 2024
 
 ![Example of app](docs/page.png)
 
@@ -8,22 +8,18 @@ Robot customiser and generator for RoboCupJunior 2021
 
 ### Components
 
-All components can be positioned and rotated anywhere around the robot.  
+All components can be positioned and rotated anywhere around the robot, with differing costs.  
 They can also be given custom names so they can be easily accessed in your code.  
 
 - GPS
 - Gyro
 - Camera (x3)
+  - Each camera can have specific camera resolutions
 - Colour Sensor
 - Accelerometer
 - Lidar Sensor
 - Distance Sensors (up to 8)
-- Wheels (up to 4) with rotation sensor
-
-
-## TODO
-
-- [x] Add finalised Lidar properties  
+- Wheels (x2) with rotation sensors
 
 ---
 

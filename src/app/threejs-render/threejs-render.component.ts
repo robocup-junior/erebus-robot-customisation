@@ -346,7 +346,6 @@ export class ThreejsRenderComponent implements OnInit {
     if ( intersects.length > 0 ) {
       const object = intersects[ 0 ].object;
       if ( object !== this.transformControl.object && this.down ) {
-        console.log("attach")
         this.transformControl.attach( object );
         this.render();
       }
@@ -388,17 +387,12 @@ export class ThreejsRenderComponent implements OnInit {
 
       if (cam != null) {
         if (this.deviceFrustums[dictName] != undefined) {
-          console.log(this.deviceFrustums[device.dictName][0].aspect)
           this.deviceFrustums[device.dictName][0].aspect = device.custom[0] / device.custom[1]
           this.deviceFrustums[device.dictName][0].updateProjectionMatrix();
           this.deviceFrustums[device.dictName][1].update();
-          // body.scene.remove(this.deviceFrustums[device.dictName][0]);
-          // body.scene.remove(this.deviceFrustums[device.dictName][1]);
-          // delete this.deviceFrustums[device.dictName];
         }
         if (this.deviceFrustums[dictName] == undefined) {
           this.deviceFrustums[dictName] = [cam, frustum];
-          // console.log("????")
           cam.position.set(0, 0, 0);
           frustum.visible = this.showFrustum;
           body.scene.add( cam );
