@@ -37,11 +37,11 @@ export class CheckBoxComponentCamera extends CheckBoxComponent {
                 let widx = this.dimKeys.indexOf(changes.values.currentValue.custom[0]);
                 let hidx = this.dimKeys.indexOf(changes.values.currentValue.custom[1]);
                 this.width = this.dimMap[widx];
-                this.prev_width = this.width;
                 this.height = this.dimMap[hidx];
+                this.cost += this.width[1] - this.prev_width[1];
+                this.cost += this.height[1] - this.prev_height[1];
+                this.prev_width = this.width;
                 this.prev_height = this.height;
-                this.cost += this.width[1];
-                this.cost += this.height[1];
             }
         }
 

@@ -21,7 +21,7 @@
           </div>
         </div>
         
-        <app-threejs-render [deviceUpdate]=this.renderDeviceUpdate [showFrustums]=showFrustums (deviceOutput)="threejsUpdate($event)"></app-threejs-render>
+        <app-threejs-render [deviceUpdate]=this.renderDeviceUpdate (deviceOutput)="threejsUpdate($event)"></app-threejs-render>
 
         <div id="axisHelpText">
           Axis Help - <span id="x_axis">X: Red</span>, <span id="y_axis">Y: Green</span>, <span id="z_axis">Z: Blue</span><br>
