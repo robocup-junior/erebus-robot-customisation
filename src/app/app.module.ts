@@ -18,14 +18,14 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import { HttpClientModule  } from '@angular/common/http';
 import { ThreejsRenderComponent } from './threejs-render/threejs-render.component';
-
-
-
+import { CheckBoxComponentCamera } from './component-checkbox-camera/component-checkbox-camera.component';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
 
 @NgModule({
   declarations: [
     AppComponent,
     CheckBoxComponent,
+    CheckBoxComponentCamera,
     SliderComponent,
     PositionRotationComponent,
     ThreejsRenderComponent
@@ -42,7 +42,8 @@ import { ThreejsRenderComponent } from './threejs-render/threejs-render.componen
     MatExpansionModule,
     MatInputModule,
     MatSnackBarModule,
-    HttpClientModule 
+    HttpClientModule,
+    FormsModule
   ],
   providers: [AppComponent],
   bootstrap: [AppComponent]

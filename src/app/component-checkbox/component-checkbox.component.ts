@@ -73,10 +73,6 @@ export class CheckBoxComponent {
                 this.disable()
             }
         }
-        if ("totalCost" in changes) {
-            this.disableCheckBox(changes.totalCost.currentValue);
-        }
-
     }
 
     disableCheckBox(totalCost: number): void {
@@ -89,15 +85,10 @@ export class CheckBoxComponent {
 
     click($event): void {
         if ($event.checked) {
-            if (!this.withinBudget(this.totalCost)) {
-                this.checked = false
-                // $event.checked = false;
-            } else {
-                this.checked = true
-                this.expPanel.open();
-                this.outputCost.emit(this.cost);
-                this.emitComponent("add");
-            }
+            this.checked = true
+            this.expPanel.open();
+            this.outputCost.emit(this.cost);
+            this.emitComponent("add");
         } else {
             this.expPanel.close();
             this.checked = false;
