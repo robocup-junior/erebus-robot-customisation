@@ -7,24 +7,35 @@
         <div style="text-align: center;">
           <img src="/assets/images/robocup.png" style="height: 50px;"/>
           <h1 style="margin-bottom: 5px;">
-            Erebus Robot Customisation 2023
+            Erebus Robot Customisation 2024
           </h1>
-          <span>Ver. 23.0.0</span>
+          <span>Ver. 24.0.0</span>
           <h2 class="budget">
-            Budget: {{budget}} &nbsp;&nbsp;Cost: {{cost}}
+            Budget: {{budget}} &nbsp;&nbsp;<span [ngStyle]="{'color': costColor}">Cost: {{cost}}</span>
+            <span id="overbudgetWarning" *ngIf="overbudget">
+              - Over budget!
+            </span>
           </h2>
+          <div id="axisHelpText">
+            Click on sensor to show gizmo - (W) - Translation mode    (R) - Rotation mode <br>
+          </div>
         </div>
         
-        <app-threejs-render [deviceUpdate]=this.renderDeviceUpdate></app-threejs-render>
+        <app-threejs-render [deviceUpdate]=this.renderDeviceUpdate (deviceOutput)="threejsUpdate($event)"></app-threejs-render>
 
         <div id="axisHelpText">
-          Axis Help - <span id="x_axis">X: Red</span>, <span id="y_axis">Y: Green</span>, <span id="z_axis">Z: Blue</span>
+          Axis Help - <span id="x_axis">X: Red</span>, <span id="y_axis">Y: Green</span>, <span id="z_axis">Z: Blue</span><br>
+          <i>Green arrow indicates the front of the robot.</i>
         </div>
         <br>
         <div id="file">
           <label>File Name: </label>
           <input #fileNameInput class="input" value="{{fileName}}">
-          <button mat-raised-button color="primary" (click)="export_to_json()">Export to Json</button>
+          <button mat-raised-button color="primary" (click)="export_to_json()" [disabled]="overbudget">Export to Json</button>
+          <br>
+          <span id="overbudgetWarningSmall" *ngIf="overbudget">
+            Over budget! Exporting disabled.
+          </span>
           <br>
           <br>
           <button mat-raised-button color="primary" (click)="jsonInput.click()">Import from Json</button>
@@ -35,7 +46,8 @@
       <td colspan="2">
         <h2>Sensors:</h2>
         <div *ngFor="let item of components">
-          <app-component-checkbox [import]=checkboxImport[item.dictName] [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addRenderDevice($event)"></app-component-checkbox>
+          <app-component-checkbox-camera *ngIf="item.name == 'Camera'" [import]=checkboxImport[item.dictName] [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addRenderDevice($event)"></app-component-checkbox-camera>
+          <app-component-checkbox *ngIf="item.name != 'Camera'" [import]=checkboxImport[item.dictName] [values]=checkboxValues[item.dictName] [customName]="item.defaultName" [dictName]="item.dictName" [type]="item.type" [cost]="item.cost" [name]="item.name" [totalCost]="cost" [budget]="budget" (outputCost)="checkBoxChecked($event)" (component)="addRenderDevice($event)"></app-component-checkbox>
         </div>
         <br>
       </td>
@@ -45,14 +57,14 @@
         <br>
         <br>
         <div *ngFor="let dist of distsIterator; let j = index">
-          <app-component-slider [values]=distanceSensorValues[j] [zxmax]=370 [name]="'Distance Sensor'" [number]="j + 1" (component)="addRenderDevice($event)"></app-component-slider>
+          <app-component-slider [values]=distanceSensorValues[j] [zxmax]=370 [name]="'Distance Sensor'" [number]="j + 1" [wheel]=false (component)="addRenderDevice($event)"></app-component-slider>
         </div>
       </td>
       <td colspan="2">
-        <h2>Wheels ({{wheelCost}}):</h2>
-        <label>Number of Wheels</label><mat-slider type="range" max="4" min="1" value="{{numberOfWheels}}" (input)="onWheelSliderChange($event)"></mat-slider>
-        <br>
-        <br>
+        <h2>Wheels:</h2>
+        <!-- <label>Number of Wheels</label><mat-slider type="range" max="4" min="1" value="{{numberOfWheels}}" (input)="onWheelSliderChange($event)"></mat-slider> -->
+        <!-- <br> -->
+        <!-- <br> -->
         <div *ngFor="let item of wheelsIterator; let i = index">
           <app-component-slider [values]=wheelSensorValues[i] [zxmax]=260 [name]="'Wheel'" [number]="i + 1" [wheel]=true (component)="addRenderDevice($event)"></app-component-slider>
         </div>
@@ -63,12 +75,12 @@
   <footer id="help_text">
     <div class="warning_child warning_symbol">&#9888;</div>
     <div class="warning_child">
-      <b>This version of the robot customisation only works with Erebus v23.0.0+ and Webots 2023a.</b> Please make sure you download the correct Erebus and Webots versions before generating robots.
+      <b>This version of the robot customisation only works with Erebus v24.0.0+ and Webots 2023b+.</b> Please make sure you download the correct Erebus and Webots versions before generating robots.
       <br>
       If you need to use previous version of Erebus, please use the corresponding version of Robot Customiser: 
       <select name="select" onChange="location.href=value;">
-        <option value="#">v23.x.x</option>
-        <option value="https://v21.robot.erebus.rcj.cloud">v21.x.x</option>
+        <option value="#">v24.x.x</option>
+        <option value="https://v23.robot.erebus.rcj.cloud">v23.x.x</option>
       </select>
     </div>
   </footer>

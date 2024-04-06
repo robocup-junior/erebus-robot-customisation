@@ -53,5 +53,12 @@ export const components = [
         defaultName: "lidar",
         cost: 500
     }
-
 ]
+
+export const dims = new Map<number, number>([
+    [32, 0],
+    [40, 0],
+    [64, 100],
+    [128, 200],
+    [256, 300],
+]);

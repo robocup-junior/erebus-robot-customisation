@@ -1,6 +1,7 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { components } from './component_costs';
+import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { components, dims } from './component_costs';
 import { Device } from './device';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2'
@@ -12,6 +13,7 @@ import Swal from 'sweetalert2'
 })
 export class AppComponent implements AfterViewInit {
   budget: number = 3000;
+  overbudget: boolean = false;
   title: string = 'robot-customisation';
   components = components;
 
@@ -27,6 +29,7 @@ export class AppComponent implements AfterViewInit {
   distsIterator: Array<number> = Array(this.numberOfDists).fill(0);
 
   cost: number = this.numberOfWheels * this.wheelCost + this.numberOfDists * this.distCost;
+  costColor = '#000000';
 
   selectedDevices = {};
 
@@ -42,7 +45,7 @@ export class AppComponent implements AfterViewInit {
 
   renderDeviceUpdate: Device;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private cd: ChangeDetectorRef, private snackBar: MatSnackBar) {
   }
 
   // Create THREE.js view
@@ -67,60 +70,142 @@ export class AppComponent implements AfterViewInit {
     this.cost += value;
   }
 
+  eulerToAngleAxis(rotation, wheel) {
+    // https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToAngle/
+
+    // Assuming the angles are in radians.
+    let c1 = Math.cos(rotation.z / 2);
+    let s1 = Math.sin(rotation.z / 2);
+    let c2 = Math.cos(rotation.y / 2);
+    let s2 = Math.sin(rotation.y / 2);
+    let c3 = Math.cos(rotation.x / 2);
+    let s3 = Math.sin(rotation.x / 2);
+    let c1c2 = c1 * c2;
+    let s1s2 = s1 * s2;
+
+    let w = c1c2 * c3 - s1s2 * s3;
+    let x = c1c2 * s3 + s1s2 * c3;
+    let y = s1 * c2 * c3 + c1 * s2 * s3;
+    let z = c1 * s2 * c3 - s1 * c2 * s3;
+
+    let angle = 2 * Math.acos(w);
+    let norm = x * x + y * y + z * z;
+
+    if (norm < 0.001) { // when all euler angles are zero angle =0 so
+        // we can set axis to anything to avoid divide by zero
+        x = 1;
+        y = z = 0;
+    } else {
+        norm = Math.sqrt(norm);
+        x /= norm;
+        y /= norm;
+        z /= norm;
+    }
+
+    let rx, ry, rz, a;
+    rx = +x.toFixed(2);
+    if (wheel) {
+        ry = +y.toFixed(2);
+        rz = +z.toFixed(2);
+    } else {
+        rz = +y.toFixed(2);
+        ry = +z.toFixed(2);
+    }
+    a = +angle.toFixed(2);
+    return [rx, ry, rz, a]
+  }
+
+  threejsUpdate($event) {
+    this.distanceSensorValues = []
+    this.wheelSensorValues = []
+    this.checkboxValues = {}
+
+    this.selectedDevices[$event.name].x = $event.position.x * 1000;
+    this.selectedDevices[$event.name].y = $event.position.y * 1000;
+    this.selectedDevices[$event.name].z = $event.position.z * 1000;
+    let values;
+    if ($event.name.includes("Wheel")) {
+      values = this.eulerToAngleAxis($event.rotation, false)
+    } else {
+      values = this.eulerToAngleAxis($event.rotation, false)
+    }
+    this.selectedDevices[$event.name].rx = values[0];
+    this.selectedDevices[$event.name].ry = values[2];
+    this.selectedDevices[$event.name].rz = values[1];
+    this.selectedDevices[$event.name].a = values[3];
+
+    if ($event.name.includes("Distance Sensor")) {
+      this.distanceSensorValues[parseInt($event.name.split(" ")[2])-1] = this.selectedDevices[$event.name]
+    }
+    else if ($event.name.includes("Wheel")) {
+      this.wheelSensorValues[parseInt($event.name.split(" ")[1])-1] = this.selectedDevices[$event.name]
+    }
+    else {
+      this.checkboxValues[$event.name] = this.selectedDevices[$event.name]
+    }
+  }
+
   withinBudget(value: number): boolean {
     return (this.cost + (value)) <= this.budget
   }
 
+  checkOverBudget() {
+    this.overbudget = this.cost > this.budget;
+    // this.overbudget = true;
+    if (this.overbudget) this.costColor = '#FF0000';
+    else this.costColor = '#000000';
+  }
+
   addRenderDevice(device: Device): Promise<unknown> {
+    if (device.type == "sub") {
+      return this.destroyRenderDevice(device);
+    }
     this.selectedDevices[device.dictName] = device;
-    this.renderDeviceUpdate = device;
+    this.renderDeviceUpdate = {...device};
+    this.cd.detectChanges();
+    this.checkOverBudget();
     return new Promise(resolve => { setTimeout(() => resolve('added')), 10000 });
   }
 
-  destroyRenderDevice(device: Device): Promise<unknown> {
+  destroyRenderDevice(device: Device) {
     device.type = 'sub';
     this.renderDeviceUpdate = {...device};
+    this.cd.detectChanges();
     delete this.selectedDevices[device.dictName];
+    this.checkOverBudget();
     return new Promise(resolve => { setTimeout(() => resolve('destroyed')), 10000 });
   }
 
   onWheelSliderChange($event): void {
     this.previousWheelNumber = this.numberOfWheels;
-    if (this.withinBudget((parseInt($event.value) * this.wheelCost) - (this.previousWheelNumber * this.wheelCost))) {
-      this.numberOfWheels = parseInt($event.value);
-      this.wheelsIterator = Array(this.numberOfWheels).fill(0);
-      if (this.previousWheelNumber - this.numberOfWheels > 0) {        
-        let numWheelToRmv = this.previousWheelNumber - this.numberOfWheels;
-        for (let i = this.previousWheelNumber; i > this.previousWheelNumber - numWheelToRmv; i --) {
-          //decreased slider
-          this.selectedDevices["Wheel " + i].type = "sub";
-          this.destroyRenderDevice(this.selectedDevices["Wheel " + i]);
-        }
+    this.numberOfWheels = parseInt($event.value);
+    this.wheelsIterator = Array(this.numberOfWheels).fill(0);
+    if (this.previousWheelNumber - this.numberOfWheels > 0) {        
+      let numWheelToRmv = this.previousWheelNumber - this.numberOfWheels;
+      for (let i = this.previousWheelNumber; i > this.previousWheelNumber - numWheelToRmv; i --) {
+        //decreased slider
+        this.selectedDevices["Wheel " + i].type = "sub";
+        this.destroyRenderDevice(this.selectedDevices["Wheel " + i]);
       }
-      this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
-    } else {
-      $event.value = this.previousWheelNumber;
     }
-
+    this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
+    this.checkOverBudget();
   }
 
   onDistSliderChange($event): void {
     this.previousDistNumber = this.numberOfDists;
-    if (this.withinBudget((parseInt($event.value) * this.distCost) - (this.previousDistNumber * this.distCost))) {
-      this.numberOfDists = parseInt($event.value);
-      this.distsIterator = Array(this.numberOfDists).fill(0);
-      if (this.previousDistNumber - this.numberOfDists > 0) {
-        let numDistsToRmv = this.previousDistNumber - this.numberOfDists;
-        for (let i = this.previousDistNumber; i > this.previousDistNumber - numDistsToRmv; i --) {
-          //decreased slider
-          this.selectedDevices["Distance Sensor " + i].type = "sub";
-          this.destroyRenderDevice(this.selectedDevices["Distance Sensor " + i]);
-        }
+    this.numberOfDists = parseInt($event.value);
+    this.distsIterator = Array(this.numberOfDists).fill(0);
+    let numDistsToRmv = this.previousDistNumber - this.numberOfDists;
+    if (numDistsToRmv > 0) {
+      for (let i = this.previousDistNumber; i > this.numberOfDists; i --) {
+        //decreased slider
+        this.selectedDevices["Distance Sensor " + i].type = "sub";
+        this.destroyRenderDevice(this.selectedDevices["Distance Sensor " + i]);
       }
-      this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
-    } else {
-      $event.value = this.previousDistNumber;
     }
+    this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
+    this.checkOverBudget();
   }
 
   //https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
@@ -138,6 +223,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   export_to_json(): void {
+    if (this.overbudget) {
+      this.snackBar.open('You are over budget! Try removing some components.');
+      return;
+    }
     let customNames = [];
     let exportFLU_selectedDevices = JSON.parse(JSON.stringify(this.selectedDevices));
     //customName check
@@ -195,10 +284,12 @@ export class AppComponent implements AfterViewInit {
         this.wheelSensorValues.push(json[component])
         this.cost += this.wheelCost;
       }
+      else if (json[component].name == "Camera" && json[component].custom != undefined) {
+        this.cost += dims.get(json[component].custom[0]) + dims.get(json[component].custom[1])
+      }
 
       for (let c in components) {
         if (components[c].dictName == component) {
-
           this.checkboxValues[component] = json[component]
           this.cost += components[c].cost
         }
@@ -210,12 +301,12 @@ export class AppComponent implements AfterViewInit {
     this.previousWheelNumber = this.numberOfWheels;
     this.numberOfWheels = this.wheelSensorValues.length
     this.wheelsIterator = Array(this.numberOfWheels).fill(0);
-    this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
+    // this.cost += (this.numberOfWheels * this.wheelCost) - (this.previousWheelNumber * this.wheelCost)
 
     this.previousDistNumber = this.numberOfDists
     this.numberOfDists = this.distanceSensorValues.length
     this.distsIterator = Array(this.numberOfDists).fill(0);
-    this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
+    // this.cost += (this.numberOfDists * this.distCost) - (this.previousDistNumber * this.distCost)
 
     for (let component in this.selectedDevices) {
       await this.addRenderDevice(this.selectedDevices[component]);
