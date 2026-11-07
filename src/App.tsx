@@ -82,6 +82,9 @@ export function App() {
   const [notice, setNotice] = useState<Notice | null>(null);
   const [dropping, setDropping] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  // The robot as last loaded (the default robot or an imported file). Like the previous
+  // version, a distance sensor that is added back starts from its values in this robot.
+  const loadedRobot = useRef<Devices>(createDefaultRobot());
 
   // Undo can remove the selected device and redo can bring it back.
   const selected = selection !== null && selection in devices ? selection : null;
@@ -156,7 +159,8 @@ export function App() {
     }
     let index = 1;
     while (`${DISTANCE_SENSOR_NAME} ${index}` in devices) index++;
-    const sensor = createDistanceSensor(index);
+    const dictName = `${DISTANCE_SENSOR_NAME} ${index}`;
+    const sensor = loadedRobot.current[dictName] ?? createDistanceSensor(index);
     setDevices((current) => ({ ...current, [sensor.dictName]: sensor }));
     setSelection(sensor.dictName);
   };
@@ -183,6 +187,7 @@ export function App() {
     try {
       const robot = parseRobot(await file.text());
       setDevices(() => robot.devices);
+      loadedRobot.current = robot.devices;
       setFileName(file.name.replace(/\.json$/i, ''));
       setSelection(null);
       const ignored = robot.ignored.length ? ` Ignored: ${robot.ignored.join(', ')}.` : '';
@@ -202,6 +207,7 @@ export function App() {
 
   const resetRobot = () => {
     setDevices(createDefaultRobot);
+    loadedRobot.current = createDefaultRobot();
     setFileName(DEFAULT_FILE_NAME);
     setSelection(null);
     setNotice({ text: 'Reset to the default robot.', canUndo: true });
