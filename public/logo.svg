@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Erebus Robot Customisation">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#tile)"/>
+  <g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round">
+    <path d="M24.2 23.2a11 11 0 0 1 15.6 0" opacity=".7"/>
+    <path d="M18.6 17.6a19 19 0 0 1 26.8 0" opacity=".38"/>
+  </g>
+  <rect x="11" y="30" width="6" height="20" rx="3" fill="#0b1f4d"/>
+  <rect x="47" y="30" width="6" height="20" rx="3" fill="#0b1f4d"/>
+  <circle cx="32" cy="40" r="13" fill="#fff"/>
+  <circle cx="32" cy="31" r="4.5" fill="#22c55e"/>
+</svg>
