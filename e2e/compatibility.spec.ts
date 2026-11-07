@@ -21,7 +21,8 @@ const removeDistanceSensor = (page: Page) =>
 
 /**
  * The legacy-*.json fixtures were exported by the previous Angular version of this app
- * by performing the same steps (two-distance-sensors.json is an input made by hand). Erebus
+ * by performing the same steps (two-distance-sensors.json and
+ * old-style-rotations.json are inputs made by hand). Erebus
  * reads these files, so the export must match them byte for byte.
  */
 test.describe('compatibility with the previous version', () => {
@@ -130,4 +131,23 @@ test.describe('compatibility with the previous version', () => {
     const { text } = await exportRobot(page);
     expect(text).toBe(await readFixtureText('legacy-import-add.json'));
   });
+
+  test('keeps every value of an imported file that is not edited', async ({ page }) => {
+    // Rotations as the previous version wrote them: two decimals, an axis that is not
+    // normalised and a negative angle.
+    await importRobot(page, fixture('old-style-rotations.json'));
+    for (const row of ['Gyro', 'Lidar', 'Distance Sensor 2', 'Wheel 1', 'Camera 2']) {
+      await openRow(page, row);
+      await page.getByText('Angle-axis values').click();
+    }
+    const original = await readFixtureText('old-style-rotations.json');
+    expect((await exportRobot(page)).text).toBe(original);
+
+    await openRow(page, 'Gyro');
+    await setNumber(position(page, 'X'), 31);
+    const edited = original.replace('"x": 30,', '"x": 31,');
+    expect(edited).not.toBe(original);
+    expect((await exportRobot(page)).text).toBe(edited);
+  });
 });
+
