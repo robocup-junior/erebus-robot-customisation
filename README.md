@@ -1,50 +1,60 @@
-# Robot Customisation
+<p align="center"><img src="public/logo.svg" width="96" alt=""></p>
 
-Robot customiser and generator for RoboCupJunior 2024
+# Erebus Robot Customisation
+
+Robot customiser and generator for RoboCupJunior Rescue Simulation (Erebus).
+Works with Erebus v25.0.0+ and Webots 2023b+.
+
+**Open the app: <https://robot.erebus.rcj.cloud>**
 
 ![Example of app](docs/page.png)
 
 ## Features
 
+- Add sensors and place them in 3D, with the gizmo or with exact values
+- See what is left of the budget, and what a sensor would cost before adding it
+- Point a sensor in a direction with one click
+- Name components for use in your controller
+- Undo and redo, and automatic saving of your work in the browser
+- Import and export robot files, also by dropping a file onto the page
+
 ### Components
 
-All components can be positioned and rotated anywhere around the robot, with differing costs.  
-They can also be given custom names so they can be easily accessed in your code.  
-
-- GPS
-- Gyro
-- Camera (x3)
-  - Each camera can have specific camera resolutions
-- Colour Sensor
-- Accelerometer
-- Lidar Sensor
-- Distance Sensors (up to 8)
+- Gyro, inertial unit, GPS, colour sensor, accelerometer, lidar
+- Cameras (x3), each with its own resolution
+- Distance sensors (up to 8)
 - Wheels (x2) with rotation sensors
 
----
+### Shortcuts
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.0.
+| Key | Action |
+| --- | --- |
+| `W` / `R` | Move / rotate with the gizmo |
+| `Esc` | Close the selected component |
+| `Ctrl/⌘ Z` | Undo |
+| `Ctrl/⌘ Shift Z` | Redo |
 
-## Development server
+## Development
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Requires Node.js 22.12 or later.
 
-## Code scaffolding
+```sh
+npm install
+npm run dev
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Type-check and build to `dist/robot-customisation` |
+| `npm run preview` | Serve the production build |
+| `npm test` | Run the unit tests |
+| `npm run test:e2e` | Run the browser tests (first run `npx playwright install chromium`) |
 
-## Build
+Built with [Vite](https://vite.dev), [React](https://react.dev), TypeScript and [three.js](https://threejs.org).
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Robot file format
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Erebus reads the exported JSON, so the keys and field names in `src/robot` must stay as they are.
+`e2e/fixtures` holds files exported by the previous version of this app, and
+`e2e/compatibility.spec.ts` checks that exports still match them.
