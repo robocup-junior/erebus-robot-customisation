@@ -1,4 +1,3 @@
-import { execSync } from 'node:child_process';
 import { expect } from '@playwright/test';
 import {
   canvasPicture,
@@ -181,11 +180,14 @@ test.describe('branding', () => {
 
     await copyright.click();
     await expect(info).toBeVisible();
-    const commit = execSync('git rev-parse HEAD').toString().trim();
-    await expect(info.getByRole('link', { name: commit.slice(0, 7) })).toHaveAttribute(
+    // A dev server that is already running may have been started at an earlier commit.
+    const link = info.getByRole('link');
+    await expect(link).toHaveAttribute(
       'href',
-      `https://github.com/robocup-junior/erebus-robot-customisation/commit/${commit}`,
+      /^https:\/\/github\.com\/robocup-junior\/erebus-robot-customisation\/commit\/[0-9a-f]{40}$/,
     );
+    const commit = (await link.getAttribute('href'))!.split('/').at(-1)!;
+    await expect(link).toHaveText(commit.slice(0, 7));
     await expect(info.getByText('Built')).toBeVisible();
 
     await page.keyboard.press('Escape');

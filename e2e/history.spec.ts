@@ -62,6 +62,8 @@ test('one gizmo drag is one undo step and moves the model back', async ({ page }
 });
 
 test('typing a name is one undo step', async ({ page }) => {
+  // Hold the clock still, so that a busy machine can't spread the keys over the merge window.
+  await page.clock.pauseAt(new Date());
   await sensorSwitch(page, 'GPS').click();
   await nameField(page).fill('');
   await nameField(page).pressSequentially('rover');
