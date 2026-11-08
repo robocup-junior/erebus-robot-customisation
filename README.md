@@ -58,3 +58,7 @@ Built with [Vite](https://vite.dev), [React](https://react.dev), TypeScript and 
 Erebus reads the exported JSON, so the keys and field names in `src/robot` must stay as they are.
 `e2e/fixtures` holds files exported by the previous version of this app, and
 `e2e/compatibility.spec.ts` checks that exports still match them.
+
+## Copyright
+
+© 2020–2026 RoboCupJunior Rescue Simulation

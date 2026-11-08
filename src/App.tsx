@@ -322,6 +322,7 @@ export function App() {
             onChange={updateDevice}
           />
           <footer className="compat">
+            <small>© 2020–2026 RoboCupJunior Rescue Simulation</small>
             <img src={roboCupLogoUrl} alt="RoboCupJunior Rescue" />
           </footer>
         </aside>

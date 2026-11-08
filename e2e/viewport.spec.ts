@@ -172,4 +172,8 @@ test.describe('branding', () => {
     expect(links).toHaveLength(4);
     for (const link of links) expect((await request.get(link)).ok()).toBe(true);
   });
+
+  test('the footer shows the copyright', async ({ page }) => {
+    await expect(page.getByText('© 2020–2026 RoboCupJunior Rescue Simulation')).toBeVisible();
+  });
 });

@@ -419,7 +419,7 @@ kbd {
 .advanced summary { color: var(--text-2); font-size: 12px; font-weight: 550; cursor: pointer; }
 .advanced summary svg { vertical-align: -2px; }
 
-.compat { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding: 6px 16px; border-top: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
+.compat { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 16px; border-top: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
 
 .compat img { height: 26px; padding: 2px 4px; background: #fff; border-radius: 5px; }
 
