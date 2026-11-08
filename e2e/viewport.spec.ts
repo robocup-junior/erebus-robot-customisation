@@ -81,8 +81,19 @@ test.describe('gizmo', () => {
   });
 });
 
+test('the gizmo modes only show while a component is selected', async ({ page }) => {
+  const modes = page.getByRole('group', { name: 'Gizmo mode' });
+  await expect(modes).toBeHidden();
+  await sensorSwitch(page, 'GPS').click();
+  await expect(modes).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(modes).toBeHidden();
+});
+
 test.describe('keyboard shortcuts', () => {
   test('W and R switch the gizmo mode', async ({ page }) => {
+    await sensorSwitch(page, 'GPS').click();
+    await page.keyboard.press('Tab'); // Leave the switch, so that keys go to the page.
     await page.keyboard.press('r');
     await expect(modeButton(page, 'Rotate')).toHaveAttribute('aria-pressed', 'true');
     await page.keyboard.press('w');

@@ -92,14 +92,19 @@ export function Viewport({
       <div className="viewport-stage" ref={stage} />
 
       <div className="viewport-bar viewport-bar--top">
-        <div className="segmented" role="group" aria-label={t('gizmoMode')}>
-          <button aria-pressed={mode === 'translate'} onClick={() => setMode('translate')}>
-            <Move3d size={16} /> {t('move')} <kbd>W</kbd>
-          </button>
-          <button aria-pressed={mode === 'rotate'} onClick={() => setMode('rotate')}>
-            <Rotate3d size={16} /> {t('rotate')} <kbd>R</kbd>
-          </button>
-        </div>
+        {/* The modes change the gizmo of the selected component, so they only show with one. */}
+        {selected ? (
+          <div className="segmented" role="group" aria-label={t('gizmoMode')}>
+            <button aria-pressed={mode === 'translate'} onClick={() => setMode('translate')}>
+              <Move3d size={16} /> {t('move')} <kbd>W</kbd>
+            </button>
+            <button aria-pressed={mode === 'rotate'} onClick={() => setMode('rotate')}>
+              <Rotate3d size={16} /> {t('rotate')} <kbd>R</kbd>
+            </button>
+          </div>
+        ) : (
+          <span />
+        )}
         <div className="segmented" role="group" aria-label={t('views')}>
           {VIEWS.map((view) => (
             <button key={view.id} onClick={() => viewer.current?.setView(view.id)}>
