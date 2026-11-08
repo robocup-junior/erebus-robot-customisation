@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import { expect } from '@playwright/test';
 import {
   canvasPicture,
@@ -173,7 +174,21 @@ test.describe('branding', () => {
     for (const link of links) expect((await request.get(link)).ok()).toBe(true);
   });
 
-  test('the footer shows the copyright', async ({ page }) => {
-    await expect(page.getByText('© 2020–2026 Erebus Development Team')).toBeVisible();
+  test('the copyright shows the build information when clicked', async ({ page }) => {
+    const copyright = page.getByRole('button', { name: '© 2020–2026 Erebus Development Team' });
+    const info = page.getByRole('dialog', { name: 'Build information' });
+    await expect(info).toBeHidden();
+
+    await copyright.click();
+    await expect(info).toBeVisible();
+    const commit = execSync('git rev-parse HEAD').toString().trim();
+    await expect(info.getByRole('link', { name: commit.slice(0, 7) })).toHaveAttribute(
+      'href',
+      `https://github.com/robocup-junior/erebus-robot-customisation/commit/${commit}`,
+    );
+    await expect(info.getByText('Built')).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(info).toBeHidden();
   });
 });

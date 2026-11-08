@@ -13,6 +13,7 @@ import { type DragEvent, useCallback, useEffect, useRef, useState } from 'react'
 import roboCupLogoUrl from './assets/images/robocup.png';
 import { BudgetCard } from './components/BudgetCard';
 import { ComponentPanel } from './components/ComponentPanel';
+import { Copyright } from './components/Copyright';
 import { TYPING_TARGETS } from './keyboard';
 import { BUDGET, DISTANCE_SENSOR_NAME, type SensorSpec } from './robot/catalog';
 import {
@@ -322,7 +323,7 @@ export function App() {
             onChange={updateDevice}
           />
           <footer className="compat">
-            <small>© 2020–2026 Erebus Development Team</small>
+            <Copyright />
             <img src={roboCupLogoUrl} alt="RoboCupJunior Rescue" />
           </footer>
         </aside>

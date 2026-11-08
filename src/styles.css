@@ -421,6 +421,50 @@ kbd {
 
 .compat { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 16px; border-top: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
 
+.copyright {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 6px;
+  margin-left: -6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.copyright:hover { background: var(--surface-2); color: var(--text); }
+
+.build-info {
+  position: fixed;
+  inset: auto 16px 56px auto;
+  margin: 0;
+  width: min(320px, calc(100vw - 32px));
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+}
+
+.build-info h2 { margin: 0 0 10px; font-size: 13px; font-weight: 600; }
+
+.build-info dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; margin: 0; }
+
+.build-info dt { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
+
+.build-info dd { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; min-width: 0; }
+
+.build-info code { font-size: 12px; overflow-wrap: anywhere; }
+
+.build-dirty { color: var(--warning); font-size: 12px; }
+
+.build-unknown { color: var(--text-2); }
+
 .compat img { height: 26px; padding: 2px 4px; background: #fff; border-radius: 5px; }
 
 /* Drop target */
