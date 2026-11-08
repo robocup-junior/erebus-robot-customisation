@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { ViewIcon } from '../components/icons';
+import { useI18n } from '../i18n/I18n';
+import type { MessageKey } from '../i18n/messages/en';
 import type { Devices } from '../robot/device';
 import { TYPING_TARGETS } from '../keyboard';
 import {
@@ -19,11 +21,11 @@ import {
   type ViewName,
 } from './RobotViewer';
 
-const VIEWS: { id: ViewName; label: string }[] = [
-  { id: 'iso', label: '3D' },
-  { id: 'top', label: 'Top' },
-  { id: 'front', label: 'Front' },
-  { id: 'side', label: 'Side' },
+const VIEWS: { id: ViewName; label: MessageKey }[] = [
+  { id: 'iso', label: 'view3d' },
+  { id: 'top', label: 'viewTop' },
+  { id: 'front', label: 'viewFront' },
+  { id: 'side', label: 'viewSide' },
 ];
 
 interface ViewportProps {
@@ -41,6 +43,7 @@ export function Viewport({
   onSelect,
   onTransform,
 }: ViewportProps) {
+  const { t } = useI18n();
   const stage = useRef<HTMLDivElement>(null);
   const viewer = useRef<RobotViewer | null>(null);
   const callbacks = useRef({ onSelect, onTransform });
@@ -85,22 +88,22 @@ export function Viewport({
   const ModeIcon = mode === 'translate' ? Move3d : Rotate3d;
 
   return (
-    <section className="viewport" aria-label="Robot preview">
+    <section className="viewport" aria-label={t('robotPreview')}>
       <div className="viewport-stage" ref={stage} />
 
       <div className="viewport-bar viewport-bar--top">
-        <div className="segmented" role="group" aria-label="Gizmo mode">
+        <div className="segmented" role="group" aria-label={t('gizmoMode')}>
           <button aria-pressed={mode === 'translate'} onClick={() => setMode('translate')}>
-            <Move3d size={16} /> Move <kbd>W</kbd>
+            <Move3d size={16} /> {t('move')} <kbd>W</kbd>
           </button>
           <button aria-pressed={mode === 'rotate'} onClick={() => setMode('rotate')}>
-            <Rotate3d size={16} /> Rotate <kbd>R</kbd>
+            <Rotate3d size={16} /> {t('rotate')} <kbd>R</kbd>
           </button>
         </div>
-        <div className="segmented" role="group" aria-label="Camera view">
+        <div className="segmented" role="group" aria-label={t('views')}>
           {VIEWS.map((view) => (
             <button key={view.id} onClick={() => viewer.current?.setView(view.id)}>
-              <ViewIcon view={view.id} /> {view.label}
+              <ViewIcon view={view.id} /> {t(view.label)}
             </button>
           ))}
         </div>
@@ -110,19 +113,20 @@ export function Viewport({
         {selected ? (
           <>
             <ModeIcon size={15} />
-            {mode === 'translate' ? 'Drag an arrow to move' : 'Drag a ring to rotate'}{' '}
-            {selectedName || selected}
+            {t(mode === 'translate' ? 'dragToMove' : 'dragToRotate', {
+              name: selectedName || selected,
+            })}
           </>
         ) : (
           <>
             <span>
-              <MousePointerClick size={15} /> Click to edit
+              <MousePointerClick size={15} /> {t('clickToEdit')}
             </span>
             <span>
-              <Orbit size={15} /> Drag to orbit
+              <Orbit size={15} /> {t('dragToOrbit')}
             </span>
             <span>
-              <ZoomIn size={15} /> Scroll to zoom
+              <ZoomIn size={15} /> {t('scrollToZoom')}
             </span>
           </>
         )}
@@ -134,7 +138,7 @@ export function Viewport({
           <span className="axis axis--y">Y</span>
           <span className="axis axis--z">Z</span>
           <span className="legend-front">
-            <Triangle size={12} fill="currentColor" aria-hidden /> Front of the robot
+            <Triangle size={12} fill="currentColor" aria-hidden /> {t('frontOfRobot')}
           </span>
         </p>
         <div className="viewport-toggles">
@@ -143,15 +147,15 @@ export function Viewport({
             aria-pressed={labels}
             onClick={() => setLabels(!labels)}
           >
-            <Tag size={14} /> Labels
+            <Tag size={14} /> {t('labels')}
           </button>
           <button
             className="chip"
-            title="Estimate of the field of view in Webots"
+            title={t('fieldOfViewHint')}
             aria-pressed={frustums}
             onClick={() => setFrustums(!frustums)}
           >
-            <Video size={14} /> Camera view
+            <Video size={14} /> {t('fieldOfView')}
           </button>
         </div>
       </div>

@@ -24,6 +24,8 @@ import {
   findNameProblems,
   numberedDevices,
 } from '../robot/device';
+import { useI18n } from '../i18n/I18n';
+import { deviceLabel, sensorLabel } from '../i18n/labels';
 import { DistanceIcon, sensorIcon, WheelIcon } from './icons';
 import { Inspector } from './Inspector';
 
@@ -53,22 +55,34 @@ export function ComponentPanel({
   onDistanceCountChange,
   onChange,
 }: ComponentPanelProps) {
+  const i18n = useI18n();
+  const { t } = i18n;
   const nameProblems = findNameProblems(devices);
+  const problemText = (device: Device) => {
+    const problem = nameProblems[device.dictName];
+    if (problem === 'required') return t('nameRequired');
+    if (problem === 'duplicate') return t('nameDuplicate', { name: device.customName });
+    return undefined;
+  };
   const distanceSensors = numberedDevices(devices, DISTANCE_SENSOR_NAME);
   const wheels = numberedDevices(devices, WHEEL_NAME);
   const toggle = (dictName: string) => onSelect(selected === dictName ? null : dictName);
 
-  const title = (device: Device | undefined, label: string, dictName: string, Icon: LucideIcon) => (
+  /**
+   * The row's label, and the name used in the controller when it isn't the default one
+   * (`defaultName`), so that a renamed component can be recognised.
+   */
+  const title = (device: Device | undefined, label: string, defaultName: string, Icon: LucideIcon) => (
     <>
       <span className="row-title">
         <Icon className="row-icon" size={17} aria-hidden />
         {label}
-        {nameProblems[dictName] && (
-          <TriangleAlert className="row-alert" size={14} aria-label={nameProblems[dictName]} />
+        {device && nameProblems[device.dictName] && (
+          <TriangleAlert className="row-alert" size={14} aria-label={problemText(device)} />
         )}
       </span>
-      {device && compact(device.customName) !== compact(label) && (
-        <span className="row-name">{device.customName || 'unnamed'}</span>
+      {device && compact(device.customName) !== compact(defaultName) && (
+        <span className="row-name">{device.customName || t('unnamed')}</span>
       )}
     </>
   );
@@ -76,7 +90,7 @@ export function ComponentPanel({
   const inspector = (device: Device) => (
     <Inspector
       device={device}
-      nameProblem={nameProblems[device.dictName]}
+      nameProblem={problemText(device)}
       onChange={(patch) => onChange(device.dictName, patch)}
     />
   );
@@ -89,7 +103,7 @@ export function ComponentPanel({
           <button className="row-main" aria-expanded={open} onClick={() => toggle(device.dictName)}>
             {title(
               device,
-              device.dictName,
+              deviceLabel(i18n, device),
               device.dictName,
               device.name === WHEEL_NAME ? WheelIcon : DistanceIcon,
             )}
@@ -105,6 +119,7 @@ export function ComponentPanel({
     const device = devices[spec.dictName];
     const open = selected === spec.dictName && device !== undefined;
     const tooExpensive = !device && spec.cost > remaining;
+    const label = sensorLabel(i18n, spec);
     const previewHandlers = {
       onPointerEnter: () => onPreview(spec),
       onPointerLeave: () => onPreview(null),
@@ -119,7 +134,7 @@ export function ComponentPanel({
             className="switch"
             role="switch"
             aria-checked={device !== undefined}
-            aria-label={spec.label}
+            aria-label={label}
             onClick={() => onToggleSensor(spec)}
           />
           <button
@@ -127,12 +142,12 @@ export function ComponentPanel({
             aria-expanded={device ? open : undefined}
             onClick={() => (device ? toggle(spec.dictName) : onToggleSensor(spec))}
           >
-            {title(device, spec.label, spec.dictName, sensorIcon(spec.dictName))}
+            {title(device, label, spec.defaultName, sensorIcon(spec.dictName))}
           </button>
           <span
             className="cost"
             data-warn={tooExpensive}
-            title={tooExpensive ? 'More than you have left' : undefined}
+            title={tooExpensive ? t('tooExpensive') : undefined}
           >
             {device ? deviceCost(device) : `+${spec.cost}`}
           </span>
@@ -147,14 +162,14 @@ export function ComponentPanel({
     <div className="panel">
       <section>
         <h2>
-          <Cpu size={14} /> Sensors
+          <Cpu size={14} /> {t('sensors')}
         </h2>
         <ul className="rows">{SIMPLE_SENSORS.map(renderSensor)}</ul>
       </section>
 
       <section>
         <h2>
-          <Camera size={14} /> Cameras
+          <Camera size={14} /> {t('cameras')}
         </h2>
         <ul className="rows">{CAMERAS.map(renderSensor)}</ul>
       </section>
@@ -162,12 +177,14 @@ export function ComponentPanel({
       <section>
         <div className="section-head">
           <h2>
-            <DistanceIcon size={14} /> Distance sensors
-            <span className="section-note">{DISTANCE_SENSOR_COST} each</span>
+            <DistanceIcon size={14} /> {t('distanceSensors')}
+            <span className="section-note">
+              {t('costEach', { cost: i18n.number(DISTANCE_SENSOR_COST) })}
+            </span>
           </h2>
-          <div className="stepper" role="group" aria-label="Number of distance sensors">
+          <div className="stepper" role="group" aria-label={t('distanceCount')}>
             <button
-              aria-label="Remove a distance sensor"
+              aria-label={t('removeDistance')}
               disabled={distanceSensors.length === 0}
               onClick={() => onDistanceCountChange(distanceSensors.length - 1)}
             >
@@ -175,7 +192,7 @@ export function ComponentPanel({
             </button>
             <output>{distanceSensors.length}</output>
             <button
-              aria-label="Add a distance sensor"
+              aria-label={t('addDistance')}
               disabled={distanceSensors.length >= MAX_DISTANCE_SENSORS}
               onClick={() => onDistanceCountChange(distanceSensors.length + 1)}
             >
@@ -188,8 +205,8 @@ export function ComponentPanel({
 
       <section>
         <h2>
-          <WheelIcon size={14} /> Wheels
-          <span className="section-note">required, {WHEEL_COST} each</span>
+          <WheelIcon size={14} /> {t('wheels')}
+          <span className="section-note">{t('wheelsNote', { cost: i18n.number(WHEEL_COST) })}</span>
         </h2>
         <ul className="rows">{wheels.map(renderRow)}</ul>
       </section>

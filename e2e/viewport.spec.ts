@@ -160,7 +160,7 @@ test('every icon button has a name for tooltips and screen readers', async ({ pa
 
 test.describe('branding', () => {
   test('the header shows the logo', async ({ page }) => {
-    const logo = page.locator('.brand img');
+    const logo = page.locator('.brand img').first();
     await expect(logo).toBeVisible();
     expect(await logo.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
   });

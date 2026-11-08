@@ -17,6 +17,8 @@ import {
   Tag,
 } from 'lucide-react';
 import { useId } from 'react';
+import { useI18n } from '../i18n/I18n';
+import type { MessageKey } from '../i18n/messages/en';
 import { CAMERA_DIMENSIONS } from '../robot/catalog';
 import {
   type Device,
@@ -45,10 +47,20 @@ const FACING_ICONS: Record<Facing, LucideIcon> = {
   Down: ArrowDownToLine,
 };
 
-const ANGLE_AXIS_FIELDS: { field: keyof Rotation; label: string }[] = [
-  { field: 'rx', label: 'rx' },
-  { field: 'ry', label: 'ry' },
-  { field: 'rz', label: 'rz' },
+const FACING_LABELS: Record<Facing, MessageKey> = {
+  Front: 'facingFront',
+  Left: 'facingLeft',
+  Back: 'facingBack',
+  Right: 'facingRight',
+  Up: 'facingUp',
+  Down: 'facingDown',
+};
+
+/** The axis keeps the field names of the robot file; only the angle is translated. */
+const ANGLE_AXIS_FIELDS: { field: keyof Rotation; label?: MessageKey }[] = [
+  { field: 'rx' },
+  { field: 'ry' },
+  { field: 'rz' },
   { field: 'a', label: 'angle' },
 ];
 
@@ -59,6 +71,7 @@ interface InspectorProps {
 }
 
 export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
+  const { t } = useI18n();
   const nameId = useId();
   const bounds = positionBounds(device);
   const euler = rotationToEuler(device);
@@ -71,7 +84,7 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
       <div className="field">
         <label className="field-label" htmlFor={nameId}>
           <Tag size={13} />
-          <span>Name</span>
+          <span>{t('name')}</span>
         </label>
         <input
           id={nameId}
@@ -91,7 +104,7 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
       {tags.length > 0 && (
         <p className="tags">
           <Code2 size={14} aria-hidden />
-          <span>In your controller:</span>
+          <span>{t('inController')}</span>
           {tags.map((tag) => (
             <code key={tag}>{tag}</code>
           ))}
@@ -101,18 +114,18 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
       {isCamera(device) && (
         <fieldset className="group">
           <legend>
-            <Image size={13} /> Resolution
+            <Image size={13} /> {t('resolution')}
           </legend>
           <div className="resolution">
             {(
               [
-                ['Width', MoveHorizontal],
-                ['Height', MoveVertical],
+                ['width', MoveHorizontal],
+                ['height', MoveVertical],
               ] as const
             ).map(([label, Icon], index) => (
               <label className="field" key={label}>
                 <span className="field-label">
-                  <Icon size={14} /> <span>{label}</span>
+                  <Icon size={14} /> <span>{t(label)}</span>
                 </span>
                 <select
                   className="text-input"
@@ -137,10 +150,10 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
 
       <fieldset className="group">
         <legend>
-          <Move3d size={13} /> Position
+          <Move3d size={13} /> {t('position')}
         </legend>
         <SliderField
-          label="Position"
+          label={t('position')}
           axis="x"
           value={device.x}
           min={-bounds.x}
@@ -150,7 +163,7 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
           onChange={(x) => onChange({ x })}
         />
         <SliderField
-          label="Position"
+          label={t('position')}
           axis="y"
           value={device.y}
           min={bounds.yMin}
@@ -160,7 +173,7 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
           onChange={(y) => onChange({ y })}
         />
         <SliderField
-          label="Position"
+          label={t('position')}
           axis="z"
           value={device.z}
           min={-bounds.z}
@@ -173,10 +186,10 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
 
       <fieldset className="group">
         <legend>
-          <Rotate3d size={13} /> Rotation
+          <Rotate3d size={13} /> {t('rotation')}
         </legend>
         {!isWheel(device) && (
-          <div className="facing" role="group" aria-label="Point the sensor">
+          <div className="facing" role="group" aria-label={t('pointSensor')}>
             {(Object.keys(FACINGS) as Facing[]).map((facing) => {
               const Icon = FACING_ICONS[facing];
               return (
@@ -186,7 +199,7 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
                   aria-pressed={findFacing(device) === facing}
                   onClick={() => onChange(facingToRotation(facing))}
                 >
-                  <Icon size={14} aria-hidden /> {facing}
+                  <Icon size={14} aria-hidden /> {t(FACING_LABELS[facing])}
                 </button>
               );
             })}
@@ -196,7 +209,7 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
         {(['x', 'y', 'z'] as const).map((axis) => (
           <SliderField
             key={axis}
-            label="Rotation"
+            label={t('rotation')}
             axis={axis}
             value={euler[axis]}
             min={-180}
@@ -210,14 +223,14 @@ export function Inspector({ device, nameProblem, onChange }: InspectorProps) {
 
       <details className="advanced">
         <summary>
-          <SlidersHorizontal size={13} /> Angle-axis values
+          <SlidersHorizontal size={13} /> {t('angleAxis')}
         </summary>
         <div className="angle-axis">
           {ANGLE_AXIS_FIELDS.map(({ field, label }) => (
             <label className="field" key={field}>
-              <span className="field-label">{label}</span>
+              <span className="field-label">{label ? t(label) : field}</span>
               <NumberField
-                label={label}
+                label={label ? t(label) : field}
                 value={device[field]}
                 step={0.01}
                 onChange={(value) => onChange({ [field]: value })}

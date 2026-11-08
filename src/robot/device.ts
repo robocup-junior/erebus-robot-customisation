@@ -110,15 +110,18 @@ export function numberedDevices(devices: Devices, name: string): Device[] {
     .sort((a, b) => order(a) - order(b));
 }
 
+/** Why a name can't be used from a controller. `required` or `duplicate` of another name. */
+export type NameProblem = 'required' | 'duplicate';
+
 /** Returns the devices whose names can't be used from a controller, keyed by dictName. */
-export function findNameProblems(devices: Devices): Record<string, string> {
-  const problems: Record<string, string> = {};
+export function findNameProblems(devices: Devices): Record<string, NameProblem> {
+  const problems: Record<string, NameProblem> = {};
   const seen = new Set<string>();
   for (const device of Object.values(devices)) {
     if (!device.customName) {
-      problems[device.dictName] = 'A name is required.';
+      problems[device.dictName] = 'required';
     } else if (seen.has(device.customName)) {
-      problems[device.dictName] = `"${device.customName}" is already used by another component.`;
+      problems[device.dictName] = 'duplicate';
     }
     seen.add(device.customName);
   }

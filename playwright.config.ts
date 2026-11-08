@@ -12,6 +12,8 @@ export default defineConfig({
     trace: 'retain-on-failure',
     ...devices['Desktop Chrome'],
     viewport: { width: 1440, height: 900 },
+    // The tests read English text; other languages are tested in i18n.spec.ts.
+    locale: 'en-GB',
     launchOptions: { args: ['--enable-unsafe-swiftshader'] },
   },
   webServer: {

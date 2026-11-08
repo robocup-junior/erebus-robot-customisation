@@ -153,6 +153,10 @@ a { color: var(--accent); }
 .button--primary[aria-disabled='true'] { background: var(--surface-2); color: var(--text-2); }
 .button:disabled { opacity: 0.4; cursor: default; }
 
+.save-group { display: flex; align-items: center; min-width: 0; flex: 0 1 300px; }
+.save-group .file-name { flex: 1 1 auto; border-right: 0; border-radius: 8px 0 0 8px; }
+.save-group .button--primary { flex: none; border-radius: 0 8px 8px 0; }
+
 .file-name {
   display: flex;
   align-items: center;
@@ -259,23 +263,24 @@ kbd {
 .viewport-hint {
   position: absolute;
   top: 58px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Centred across the full width, so that a long hint can use all of it before wrapping. */
+  left: 12px;
+  right: 12px;
+  width: fit-content;
+  margin: 0 auto;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 7px;
-  max-width: calc(100% - 24px);
+  gap: 2px 7px;
   padding: 4px 11px;
-  border-radius: 999px;
+  border-radius: 14px;
   background: rgb(15 18 24 / 62%);
   color: #fff;
   font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   pointer-events: none;
 }
-.viewport-hint span { display: inline-flex; align-items: center; gap: 4px; }
+.viewport-hint span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .viewport-hint span + span { margin-left: 6px; }
 
 .axis { font-weight: 700; }
@@ -419,7 +424,14 @@ kbd {
 .advanced summary { color: var(--text-2); font-size: 12px; font-weight: 550; cursor: pointer; }
 .advanced summary svg { vertical-align: -2px; }
 
-.compat { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 16px; border-top: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
+.compat { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 16px; border-top: 1px solid var(--border); color: var(--text-2); font-size: 12px; }
+
+.compat .copyright { flex: none; margin-left: 0; white-space: nowrap; }
+
+/* In the footer the flag says which language is on; the menu names every language. */
+.compat .language-button { flex: none; height: 30px; margin-left: auto; padding: 0 6px 0 8px; gap: 4px; border-color: transparent; background: none; }
+.compat .language-button:hover { background: var(--surface-2); }
+.compat .language-name { display: none; }
 
 .copyright {
   display: inline-flex;
@@ -465,7 +477,8 @@ kbd {
 
 .build-unknown { color: var(--text-2); }
 
-.compat img { height: 26px; padding: 2px 4px; background: #fff; border-radius: 5px; }
+/* White behind the logo so that it reads in dark mode too. */
+.brand .brand-partner { width: auto; height: 28px; margin-left: 4px; padding: 2px 4px; background: #fff; border-radius: 5px; }
 
 /* Drop target */
 .drop-overlay {
@@ -494,25 +507,67 @@ kbd {
 @media (max-width: 1000px) {
   .header { flex-wrap: wrap; gap: 10px; }
   .file-actions { flex: 1 1 100%; justify-content: flex-start; }
-  .file-name { flex: 1 1 120px; }
+  .save-group { flex: 1 1 260px; }
   .sidebar { width: 360px; }
+  .compat { font-size: 11px; gap: 6px; }
 }
 
 @media (max-width: 760px) {
   .app { height: auto; min-height: 100dvh; }
   .file-actions { flex-wrap: wrap; }
   .icon-group { margin-right: auto; }
-  .file-name { order: 1; flex: 1 1 60%; }
-  .button--primary { order: 2; }
+  .save-group { flex: 1 1 100%; }
   .workspace { flex-direction: column; }
   .viewport { flex: none; height: 50vh; min-height: 320px; }
   .sidebar { width: 100%; border-left: 0; border-top: 1px solid var(--border); }
   .budget { position: sticky; top: 0; z-index: 5; background: var(--surface); }
   .panel { overflow: visible; }
   .legend-front { display: none; }
-  .viewport-hint { top: 94px; white-space: normal; }
+  .viewport-hint { top: 94px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* Language */
+.flag { width: 21px; height: 14px; flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
+
+.language-button { gap: 7px; }
+
+.language-menu {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  min-width: 220px;
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.language-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  text-align: start;
+  cursor: pointer;
+}
+
+.language-menu button span { flex: 1; }
+
+.language-menu button:hover, .language-menu button:focus-visible { background: var(--surface-2); outline: none; }
+
+.language-menu button[aria-checked='true'] { font-weight: 600; color: var(--accent); }

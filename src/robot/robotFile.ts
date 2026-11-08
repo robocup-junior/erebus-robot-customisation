@@ -4,7 +4,19 @@ import defaultRobot from './defaultRobot.json';
 
 const NUMBER_FIELDS = ['x', 'y', 'z', 'rx', 'ry', 'rz', 'a'] as const;
 
-export class RobotFileError extends Error {}
+export type RobotFileProblem =
+  | { code: 'fileNotJson' }
+  | { code: 'fileNotRobot' }
+  | { code: 'fileEmpty' }
+  | { code: 'fileUnknownComponent'; key: string }
+  | { code: 'fileInvalidValues'; key: string };
+
+/** Why a file can't be read. `problem.code` is also the key of the message shown. */
+export class RobotFileError extends Error {
+  constructor(readonly problem: RobotFileProblem) {
+    super('key' in problem ? `${problem.code}: ${problem.key}` : problem.code);
+  }
+}
 
 export interface ParsedRobot {
   devices: Devices;
@@ -25,11 +37,11 @@ function identify(key: string): { name: string; type: string } | undefined {
 function parseDevice(key: string, value: unknown, kind: { name: string; type: string }): Device {
   const entry = value as Partial<Device> | null;
   if (typeof entry !== 'object' || entry === null) {
-    throw new RobotFileError(`"${key}" is not a valid component.`);
+    throw new RobotFileError({ code: 'fileUnknownComponent', key });
   }
   const numbers = NUMBER_FIELDS.map((field) => entry[field]);
   if (!numbers.every(Number.isFinite)) {
-    throw new RobotFileError(`"${key}" has a missing or invalid position or rotation.`);
+    throw new RobotFileError({ code: 'fileInvalidValues', key });
   }
   const custom = Array.isArray(entry.custom) ? entry.custom : [];
   return {
@@ -47,10 +59,10 @@ export function parseRobot(text: string): ParsedRobot {
   try {
     json = JSON.parse(text);
   } catch {
-    throw new RobotFileError('This file is not valid JSON.');
+    throw new RobotFileError({ code: 'fileNotJson' });
   }
   if (typeof json !== 'object' || json === null || Array.isArray(json)) {
-    throw new RobotFileError('This file is not a robot file.');
+    throw new RobotFileError({ code: 'fileNotRobot' });
   }
 
   const devices: Devices = {};
@@ -61,7 +73,7 @@ export function parseRobot(text: string): ParsedRobot {
     else ignored.push(key);
   }
   if (Object.keys(devices).length === 0) {
-    throw new RobotFileError('This file does not contain any robot components.');
+    throw new RobotFileError({ code: 'fileEmpty' });
   }
   return { devices, ignored };
 }

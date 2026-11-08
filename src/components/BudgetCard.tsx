@@ -1,16 +1,16 @@
 import { ArrowRight, CircleCheck, Lock, Plus, TriangleAlert, Wallet } from 'lucide-react';
+import { useI18n } from '../i18n/I18n';
+import type { MessageKey } from '../i18n/messages/en';
 import { BUDGET } from '../robot/catalog';
 import type { CostBreakdown } from '../robot/device';
 import { CATEGORY_ICONS } from './icons';
 
-const CATEGORIES: { key: keyof CostBreakdown; label: string }[] = [
-  { key: 'wheels', label: 'Wheels' },
-  { key: 'distance', label: 'Distance' },
-  { key: 'sensors', label: 'Sensors' },
-  { key: 'cameras', label: 'Cameras' },
+const CATEGORIES: { key: keyof CostBreakdown; label: MessageKey }[] = [
+  { key: 'wheels', label: 'categoryWheels' },
+  { key: 'distance', label: 'categoryDistance' },
+  { key: 'sensors', label: 'categorySensors' },
+  { key: 'cameras', label: 'categoryCameras' },
 ];
-
-const format = (value: number) => value.toLocaleString('en');
 
 export interface CostPreview {
   label: string;
@@ -25,6 +25,7 @@ interface BudgetCardProps {
 
 /** What the budget means right now. Numbers do the talking for a preview. */
 function Status({ cost, preview }: Pick<BudgetCardProps, 'cost' | 'preview'>) {
+  const { t, number: format } = useI18n();
   const remaining = BUDGET - cost;
   if (preview) {
     const after = remaining - preview.cost;
@@ -35,7 +36,11 @@ function Status({ cost, preview }: Pick<BudgetCardProps, 'cost' | 'preview'>) {
           {preview.label} −{format(preview.cost)}
         </span>
         <ArrowRight size={14} />
-        <b>{after < 0 ? `${format(-after)} over` : `${format(after)} left`}</b>
+        <b>
+          {after < 0
+            ? t('previewOver', { amount: format(-after) })
+            : t('previewLeft', { amount: format(after) })}
+        </b>
       </>
     );
   }
@@ -43,19 +48,20 @@ function Status({ cost, preview }: Pick<BudgetCardProps, 'cost' | 'preview'>) {
     return (
       <>
         <Lock size={14} />
-        <span>Remove {format(-remaining)} to export</span>
+        <span>{t('removeToExport', { amount: format(-remaining) })}</span>
       </>
     );
   }
   return (
     <>
       <CircleCheck size={14} />
-      <span>Stay within {format(BUDGET)} to export</span>
+      <span>{t('stayWithin', { amount: format(BUDGET) })}</span>
     </>
   );
 }
 
 export function BudgetCard({ cost, breakdown, preview }: BudgetCardProps) {
+  const { t, rich, number: format } = useI18n();
   const remaining = BUDGET - cost;
   const over = remaining < 0;
   const scale = Math.max(cost + (preview?.cost ?? 0), BUDGET);
@@ -63,21 +69,28 @@ export function BudgetCard({ cost, breakdown, preview }: BudgetCardProps) {
   const previewOver = preview !== null && preview.cost > remaining;
 
   return (
-    <section className="budget" aria-label="Budget" data-over={over}>
+    <section className="budget" aria-label={t('budget')} data-over={over}>
       <div className="budget-head">
         <p className="budget-left">
           {over ? <TriangleAlert size={22} /> : <Wallet size={22} />}
-          <strong>{format(Math.abs(remaining))}</strong> {over ? 'over budget' : 'left'}
+          <span>
+            {rich(over ? 'budgetOver' : 'budgetLeft', {
+              amount: <strong>{format(Math.abs(remaining))}</strong>,
+            })}
+          </span>
         </p>
         <p className="budget-total">
-          <span className="budget-used">{format(cost)}</span> / {format(BUDGET)} used
+          {rich('budgetUsed', {
+            used: <span className="budget-used">{format(cost)}</span>,
+            total: format(BUDGET),
+          })}
         </p>
       </div>
 
       <div
         className="budget-track"
         role="meter"
-        aria-label="Budget used"
+        aria-label={t('budgetMeter')}
         aria-valuemin={0}
         aria-valuemax={BUDGET}
         aria-valuenow={Math.min(cost, BUDGET)}
@@ -105,7 +118,7 @@ export function BudgetCard({ cost, breakdown, preview }: BudgetCardProps) {
           return (
             <li key={key}>
               <Icon className={`budget-icon budget-icon--${key}`} size={13} />
-              {label} <b>{format(breakdown[key])}</b>
+              {t(label)} <b>{format(breakdown[key])}</b>
             </li>
           );
         })}

@@ -14,6 +14,9 @@ import roboCupLogoUrl from './assets/images/robocup.png';
 import { BudgetCard } from './components/BudgetCard';
 import { ComponentPanel } from './components/ComponentPanel';
 import { Copyright } from './components/Copyright';
+import { LanguageMenu } from './components/LanguageMenu';
+import { useI18n } from './i18n/I18n';
+import { deviceLabel, sensorLabel } from './i18n/labels';
 import { TYPING_TARGETS } from './keyboard';
 import { BUDGET, DISTANCE_SENSOR_NAME, type SensorSpec } from './robot/catalog';
 import {
@@ -74,6 +77,8 @@ function without(devices: Devices, dictName: string): Devices {
 }
 
 export function App() {
+  const i18n = useI18n();
+  const { t } = i18n;
   const [initial] = useState(loadDraft);
   const history = useHistory<Devices>(() => initial?.devices ?? createDefaultRobot());
   const { value: devices, set: setDevices, undo, redo } = history;
@@ -168,20 +173,29 @@ export function App() {
 
   const exportRobot = () => {
     if (overBudget) {
-      const excess = (cost - BUDGET).toLocaleString('en');
-      setNotice({ text: `${excess} over budget. Remove some components to export.`, error: true });
+      setNotice({ text: t('noticeOverBudget', { amount: i18n.number(cost - BUDGET) }), error: true });
       return;
     }
     const [problem] = Object.entries(findNameProblems(devices));
     if (problem) {
-      const [dictName, message] = problem;
+      const [dictName, kind] = problem;
+      const device = devices[dictName];
       setSelection(dictName);
-      setNotice({ text: `${dictName}: ${message}`, error: true });
+      setNotice({
+        text: t('noticeProblem', {
+          subject: deviceLabel(i18n, device),
+          problem:
+            kind === 'required'
+              ? t('nameRequired')
+              : t('nameDuplicate', { name: device.customName }),
+        }),
+        error: true,
+      });
       return;
     }
     const name = `${fileName || DEFAULT_FILE_NAME}.json`;
     download(name, serializeRobot(devices));
-    setNotice({ text: `Exported ${name}.` });
+    setNotice({ text: t('noticeExported', { file: name }) });
   };
 
   const importFile = async (file: File) => {
@@ -191,11 +205,20 @@ export function App() {
       loadedRobot.current = robot.devices;
       setFileName(file.name.replace(/\.json$/i, ''));
       setSelection(null);
-      const ignored = robot.ignored.length ? ` Ignored: ${robot.ignored.join(', ')}.` : '';
-      setNotice({ text: `Imported ${file.name}.${ignored}`, canUndo: true });
+      const ignored = robot.ignored.length
+        ? ` ${t('noticeIgnored', { keys: robot.ignored.join(', ') })}`
+        : '';
+      setNotice({ text: t('noticeImported', { file: file.name }) + ignored, canUndo: true });
     } catch (error) {
       if (!(error instanceof RobotFileError)) throw error;
-      setNotice({ text: `${file.name}: ${error.message}`, error: true });
+      const { problem } = error;
+      setNotice({
+        text: t('noticeProblem', {
+          subject: file.name,
+          problem: t(problem.code, 'key' in problem ? { key: problem.key } : {}),
+        }),
+        error: true,
+      });
     }
   };
 
@@ -211,7 +234,7 @@ export function App() {
     loadedRobot.current = createDefaultRobot();
     setFileName(DEFAULT_FILE_NAME);
     setSelection(null);
-    setNotice({ text: 'Reset to the default robot.', canUndo: true });
+    setNotice({ text: t('noticeReset'), canUndo: true });
   };
 
   return (
@@ -230,13 +253,14 @@ export function App() {
         <div className="brand">
           <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" />
           <h1>Erebus Robot Customisation</h1>
+          <img className="brand-partner" src={roboCupLogoUrl} alt="RoboCupJunior Rescue" />
         </div>
         <div className="file-actions">
           <div className="icon-group">
             <button
               className="button button--icon"
-              aria-label="Undo"
-              title="Undo (Ctrl/⌘ Z)"
+              aria-label={t('undo')}
+              title={`${t('undo')} (Ctrl/⌘ Z)`}
               disabled={!history.canUndo}
               onClick={undo}
             >
@@ -244,8 +268,8 @@ export function App() {
             </button>
             <button
               className="button button--icon"
-              aria-label="Redo"
-              title="Redo (Ctrl/⌘ Shift Z)"
+              aria-label={t('redo')}
+              title={`${t('redo')} (Ctrl/⌘ Shift Z)`}
               disabled={!history.canRedo}
               onClick={redo}
             >
@@ -253,8 +277,8 @@ export function App() {
             </button>
             <button
               className="button button--icon"
-              aria-label="Reset to the default robot"
-              title="Reset to the default robot"
+              aria-label={t('reset')}
+              title={t('reset')}
               onClick={resetRobot}
             >
               <RotateCcw size={16} />
@@ -262,16 +286,16 @@ export function App() {
           </div>
           <button
             className="button"
-            title="Or drop a robot file anywhere"
+            title={t('importHint')}
             onClick={() => fileInput.current?.click()}
           >
-            <Upload size={16} /> Import
+            <Upload size={16} /> {t('import')}
           </button>
           <input
             ref={fileInput}
             type="file"
             accept=".json,application/json"
-            aria-label="Robot file"
+            aria-label={t('robotFile')}
             hidden
             onChange={(event) => {
               const file = event.target.files?.[0];
@@ -279,22 +303,25 @@ export function App() {
               if (file) void importFile(file);
             }}
           />
-          <div className="file-name">
-            <input
-              aria-label="File name"
-              value={fileName}
-              spellCheck={false}
-              onChange={(event) => setFileName(event.target.value)}
-            />
-            <span>.json</span>
+          {/* The file name and Export read as one step: name the file, then save it. */}
+          <div className="save-group">
+            <div className="file-name">
+              <input
+                aria-label={t('fileName')}
+                value={fileName}
+                spellCheck={false}
+                onChange={(event) => setFileName(event.target.value)}
+              />
+              <span>.json</span>
+            </div>
+            <button
+              className="button button--primary"
+              aria-disabled={overBudget}
+              onClick={exportRobot}
+            >
+              {overBudget ? <Lock size={16} /> : <Download size={16} />} {t('export')}
+            </button>
           </div>
-          <button
-            className="button button--primary"
-            aria-disabled={overBudget}
-            onClick={exportRobot}
-          >
-            {overBudget ? <Lock size={16} /> : <Download size={16} />} Export
-          </button>
         </div>
       </header>
 
@@ -306,11 +333,11 @@ export function App() {
           onSelect={setSelection}
           onTransform={onTransform}
         />
-        <aside className="sidebar" aria-label="Components">
+        <aside className="sidebar" aria-label={t('components')}>
           <BudgetCard
             cost={cost}
             breakdown={costBreakdown(devices)}
-            preview={preview && { label: preview.label, cost: preview.cost }}
+            preview={preview && { label: sensorLabel(i18n, preview), cost: preview.cost }}
           />
           <ComponentPanel
             devices={devices}
@@ -324,7 +351,7 @@ export function App() {
           />
           <footer className="compat">
             <Copyright />
-            <img src={roboCupLogoUrl} alt="RoboCupJunior Rescue" />
+            <LanguageMenu />
           </footer>
         </aside>
       </main>
@@ -333,7 +360,7 @@ export function App() {
         <div className="drop-overlay">
           <p>
             <FileJson size={32} aria-hidden />
-            Drop a robot file to import it
+            {t('dropToImport')}
           </p>
         </div>
       )}
@@ -351,7 +378,7 @@ export function App() {
                   setNotice(null);
                 }}
               >
-                <Undo2 size={16} /> Undo
+                <Undo2 size={16} /> {t('undo')}
               </button>
             )}
           </div>

@@ -86,12 +86,18 @@ describe('robot file', () => {
   });
 
   it.each([
-    ['not json', '{'],
-    ['an array', '[]'],
-    ['no components', '{}'],
-    ['a component without numbers', '{"gps": {"x": "1"}}'],
-  ])('rejects %s', (_, text) => {
+    ['not json', '{', { code: 'fileNotJson' }],
+    ['an array', '[]', { code: 'fileNotRobot' }],
+    ['no components', '{}', { code: 'fileEmpty' }],
+    ['a component that is not an object', '{"gps": 1}', { code: 'fileUnknownComponent', key: 'gps' }],
+    ['a component without numbers', '{"gps": {"x": "1"}}', { code: 'fileInvalidValues', key: 'gps' }],
+  ])('rejects %s', (_, text, problem) => {
     expect(() => parseRobot(text)).toThrow(RobotFileError);
+    try {
+      parseRobot(text);
+    } catch (error) {
+      expect((error as RobotFileError).problem).toEqual(problem);
+    }
   });
 });
 
@@ -100,7 +106,7 @@ describe('names', () => {
     const gps = { ...createSensor(spec('gps')), customName: '' };
     const gyro = { ...createSensor(spec('gyro')), customName: 'imu' };
     const acc = { ...createSensor(spec('acc')), customName: 'imu' };
-    expect(Object.keys(findNameProblems({ gps, gyro, acc }))).toEqual(['gps', 'acc']);
+    expect(findNameProblems({ gps, gyro, acc })).toEqual({ gps: 'required', acc: 'duplicate' });
   });
 
   it('gives wheels a motor and a sensor tag', () => {
