@@ -17,6 +17,8 @@ Works with Erebus v25.0.0+ and Webots 2023b+.
 - Name components for use in your controller
 - Undo and redo, and automatic saving of your work in the browser
 - Import and export robot files, also by dropping a file onto the page
+- In 12 languages, chosen from the browser's language or from the menu at the bottom right
+  (add `?lang=ja` to a link to open it in a language)
 
 ### Components
 
@@ -52,6 +54,11 @@ npm run dev
 | `npm run test:e2e` | Run the browser tests (first run `npx playwright install chromium`) |
 
 Built with [Vite](https://vite.dev), [React](https://react.dev), TypeScript and [three.js](https://threejs.org).
+
+## Translations
+
+Text is in `src/i18n/messages`, one file per language, with English in `en.ts`. Text a
+language leaves out is shown in English. Keep the `{placeholders}`; `npm test` checks them.
 
 ## Robot file format
 
