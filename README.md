@@ -61,4 +61,4 @@ Erebus reads the exported JSON, so the keys and field names in `src/robot` must 
 
 ## Copyright
 
-© 2020–2026 RoboCupJunior Rescue Simulation
+© 2020–2026 Erebus Development Team

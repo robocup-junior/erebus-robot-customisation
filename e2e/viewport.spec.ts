@@ -174,6 +174,6 @@ test.describe('branding', () => {
   });
 
   test('the footer shows the copyright', async ({ page }) => {
-    await expect(page.getByText('© 2020–2026 RoboCupJunior Rescue Simulation')).toBeVisible();
+    await expect(page.getByText('© 2020–2026 Erebus Development Team')).toBeVisible();
   });
 });

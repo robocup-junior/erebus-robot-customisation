@@ -322,7 +322,7 @@ export function App() {
             onChange={updateDevice}
           />
           <footer className="compat">
-            <small>© 2020–2026 RoboCupJunior Rescue Simulation</small>
+            <small>© 2020–2026 Erebus Development Team</small>
             <img src={roboCupLogoUrl} alt="RoboCupJunior Rescue" />
           </footer>
         </aside>
